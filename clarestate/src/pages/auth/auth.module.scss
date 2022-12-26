@@ -1,0 +1,112 @@
+@use "../../styles/mixins" as *;
+@use "../../styles/colors" as *;
+@use "../../styles/variables" as *;
+
+.auth {
+  color: #333;
+  .auth__wrapper {
+    display: flex;
+    .left__section {
+      width: 50%;
+      @include flexBox(center, center, column);
+      //   background: #eeeeee;
+      h1 {
+        padding-bottom: 1rem;
+        text-transform: uppercase;
+        color: rgb(18, 140, 200);
+        letter-spacing: 2px;
+      }
+      form {
+        label {
+          display: block;
+          margin-bottom: 1rem;
+          width: 400px;
+          span {
+            display: block;
+            padding-bottom: 0.8rem;
+            font-weight: 600;
+          }
+          input {
+            font-size: 14px;
+            padding: 0.8rem 1rem;
+            width: 100%;
+            border-radius: 0.3rem;
+            border: 0;
+            outline: 0;
+            margin-bottom: 0;
+            background: transparent;
+          }
+
+          .password__field {
+            @include flexBox(center, center, row);
+            border: 1px solid #333;
+            border-radius: 0.3rem;
+            padding: 0 0.8rem;
+            :first-child {
+              font-size: 1.4rem;
+              display: block;
+            }
+            input {
+              border: 0;
+              font-family: $font-family;
+            }
+            span {
+              cursor: pointer;
+            }
+          }
+          .auth__wrap {
+            display: flex;
+            border: 1px solid rgb(67, 67, 67);
+            @include flexBox(flex-start, center, row);
+            border-radius: 0.3rem;
+            padding: 0 0.8rem;
+            :first-child {
+              font-size: 1.4rem;
+              color: #000;
+            }
+          }
+        }
+        .submit__btn {
+          width: 100%;
+          margin-top: 0.8rem;
+          background: rgb(237, 182, 55);
+          font-weight: 700;
+          border-radius: 0.3rem;
+          font-size: 1.1rem;
+          padding: 0.7rem;
+          border: 0;
+          outline: 0;
+          cursor: pointer;
+        }
+        .auth__redirect {
+          padding-top: 0.6rem;
+          text-align: center;
+          font-weight: 600;
+          a {
+            color: rgb(18, 140, 200);
+            font-weight: 700;
+          }
+        }
+      }
+    }
+    .right__section {
+      width: 50%;
+      background: url("../../assets/logo1.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      object-fit: cover;
+      height: 100vh;
+      z-index: -1;
+      position: relative;
+      ::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+}
