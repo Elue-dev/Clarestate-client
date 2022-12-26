@@ -88,6 +88,23 @@
           }
         }
       }
+      .otp__wrapper {
+        @include flexBox(center, center, row);
+        padding: 2rem 0;
+        .otp__field {
+          width: 45px;
+          margin-right: 10px;
+          padding-left: 12px;
+          height: 45px;
+          outline: 0;
+          font-size: 1.3rem;
+          font-weight: 700;
+        }
+      }
+      .clear {
+        text-align: right;
+        cursor: pointer;
+      }
     }
     .right__section {
       width: 50%;

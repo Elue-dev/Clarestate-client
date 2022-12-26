@@ -21,7 +21,7 @@ export default function Signup() {
 
   const { firstName, lastName, email, password } = values;
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
