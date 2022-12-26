@@ -1,17 +1,12 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Logion from "@/pages/auth/Login";
+import { RouterProvider } from "react-router-dom";
+import { routes } from "./routes";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <div>Home page</div>,
-  },
-]);
+export const user = false;
 
 function App() {
   return (
     <div>
-      <RouterProvider router={router} />
+      <RouterProvider router={routes} />
     </div>
   );
 }
