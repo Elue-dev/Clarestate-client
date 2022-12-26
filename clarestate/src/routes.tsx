@@ -56,4 +56,8 @@ export const routes = createBrowserRouter([
       </Authenticated>
     ),
   },
+  {
+    path: "*",
+    element: <h1>PAGE DOES NOT EXIST</h1>,
+  },
 ]);
