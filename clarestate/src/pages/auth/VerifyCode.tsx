@@ -1,11 +1,25 @@
+import {
+  sendVerificationCode,
+  verifyEmail,
+} from "../../services/auth_services";
 import { FormEvent, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 import styles from "./auth.module.scss";
+import { useDispatch } from "react-redux";
+import { SET_ACTIVE_USER, SET_USER_TOKEN } from "../../redux/slices/auth_slice";
+import { HiOutlineMail } from "react-icons/hi";
 
 export default function VerifyCode() {
   const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [showInput, setShowInput] = useState(false);
+  const { userID } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (element: any, index: number) => {
     if (isNaN(element.value)) return false;
@@ -22,27 +36,53 @@ export default function VerifyCode() {
     setOtp([...otp.map((v) => "")]);
   };
 
-  const verifyCode = (e: FormEvent): void => {
+  const verifyCode = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
 
-    const OTP = otp.join("");
-    if (OTP.length === 0) {
+    const code = otp.join("");
+
+    if (code.length === 0) {
       return setError("Please enter your verification code");
-    } else if (OTP.length < 6) {
+    } else if (code.length < 6) {
       return setError("You verification code should be 6 digits");
     } else {
       setError("");
     }
 
-    setOtp([...otp.map((v) => "")]);
+    setLoading(true);
+    const response = await verifyEmail(code, userID);
+    if (response) {
+      console.log(response);
+      setOtp([...otp.map((v) => "")]);
+      dispatch(SET_ACTIVE_USER(response.user));
+      dispatch(SET_USER_TOKEN(response.token));
+      navigate("/");
+      console.log(loading);
+    }
+    setLoading(false);
+  };
+
+  const resendCode = async () => {
+    if (!email) {
+      return setEmailError(true);
+    } else {
+      setEmailError(true);
+    }
+
+    setLoading(true);
+    const response = await sendVerificationCode(email);
+    if (response.status === "success") {
+      setShowInput(false);
+    }
+    setLoading(false);
   };
 
   return (
     <section className={styles.auth}>
       <div className={styles["auth__wrapper"]}>
         <div className={styles["left__section"]}>
-          <h1>Verify Registration Code</h1>
+          <h1>Verify Your Email</h1>
           <form onSubmit={verifyCode}>
             <p>Please enter the verification code sent to your email</p>
             <br />
@@ -68,17 +108,69 @@ export default function VerifyCode() {
                 );
               })}
             </div>
-            <p className={styles.clear} onClick={clearField}>
-              Clear All
-            </p>
+
+            {otp.join("").length > 0 && (
+              <p className={styles.clear} onClick={clearField}>
+                Clear All
+              </p>
+            )}
+
             {loading && (
               <button type="button" disabled className={styles["submit__btn"]}>
-                <BeatLoader loading={loading} size={10} color={"#fff"} />
+                <BeatLoader loading={loading} size={10} color={"#000"} />
               </button>
             )}
             {!loading && (
               <button type="submit" className={styles["submit__btn"]}>
                 Verify
+              </button>
+            )}
+          </form>
+          <br />
+          <p onClick={() => setShowInput(!showInput)}>
+            Didn't get a code? <b className={styles.resend}>Resend Code</b>
+          </p>
+          <br />
+          <form
+            style={{
+              position: "relative",
+              transition: "left .3s ease",
+              left: showInput ? 0 : "-30rem",
+            }}
+          >
+            <label className={styles["resend__label"]}>
+              <div
+                className={styles["auth__wrap"]}
+                style={{ border: emailError ? "2px solid red" : "" }}
+              >
+                <HiOutlineMail />
+                <input
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onFocus={() => setEmailError(false)}
+                  placeholder="Enter your valid email"
+                />
+              </div>
+            </label>
+
+            {loading && (
+              <button
+                type="button"
+                disabled
+                className={`${styles["submit__btn"]} ${styles["resend__btn"]}`}
+              >
+                <BeatLoader loading={loading} size={10} color={"#fff"} />
+              </button>
+            )}
+            {!loading && (
+              <button
+                type="button"
+                onClick={resendCode}
+                className={`${styles["submit__btn"]} ${styles["resend__btn"]}`}
+              >
+                Proceed
               </button>
             )}
           </form>

@@ -1,5 +1,5 @@
 import { useState, useRef, FormEvent, ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { registerType } from "@/types/auth_types";
 import { TiUserOutline } from "react-icons/ti";
 import { HiOutlineMail } from "react-icons/hi";
@@ -7,11 +7,13 @@ import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "./auth.module.scss";
 import { BeatLoader } from "react-spinners";
-import { validateEmail } from "../../services/auth_services";
+import { registerUser, validateEmail } from "../../services/auth_services";
+import { useDispatch } from "react-redux";
+import { SET_USER_TOKEN } from "@/redux/slices/auth_slice";
 
 const initialState: registerType = {
-  firstName: "",
-  lastName: "",
+  first_name: "",
+  last_name: "",
   phone: "",
   email: "",
   password: "",
@@ -22,17 +24,18 @@ export default function Signup() {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const passwordRef = useRef<any | undefined>();
 
-  const { firstName, lastName, phone, email, password } = credentials;
+  const { first_name, last_name, phone, email, password } = credentials;
 
   const validateForm = () => {
-    if (!firstName) {
+    if (!first_name) {
       setError("First Name is required");
       setTimeout(() => setError(""), 4000);
       return;
-    } else if (!lastName) {
+    } else if (!last_name) {
       setError("Last Name is required");
       setTimeout(() => setError(""), 4000);
       return;
@@ -73,11 +76,22 @@ export default function Signup() {
     }
   };
 
-  const addUser = (e: FormEvent) => {
+  const addUser = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      console.log("form submitted");
+    try {
+      setLoading(true);
+      setError("");
+      if (validateForm()) {
+        const user = await registerUser(credentials);
+        if (user) {
+          navigate(`/auth/verify-code/${user.userID}`);
+        }
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
   };
 
@@ -96,8 +110,8 @@ export default function Signup() {
                 <TiUserOutline />
                 <input
                   type="text"
-                  name="firstName"
-                  value={firstName}
+                  name="first_name"
+                  value={first_name}
                   onChange={handleInputChange}
                   placeholder="Enter your first name"
                 />
@@ -109,8 +123,8 @@ export default function Signup() {
                 <TiUserOutline />
                 <input
                   type="text"
-                  name="lastName"
-                  value={lastName}
+                  name="last_name"
+                  value={last_name}
                   onChange={handleInputChange}
                   placeholder="Enter your last name"
                 />

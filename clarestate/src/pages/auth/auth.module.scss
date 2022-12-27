@@ -107,6 +107,17 @@
             font-weight: 700;
           }
         }
+        .resend__label {
+          margin-bottom: 0;
+        }
+        .resend__btn {
+          background: #333;
+          color: #fff;
+        }
+      }
+      .resend {
+        cursor: pointer;
+        color: $color-primary;
       }
       .otp__wrapper {
         @include flexBox(center, center, row);

@@ -49,7 +49,7 @@ export const routes = createBrowserRouter([
     ),
   },
   {
-    path: "/auth/verify-code",
+    path: "/auth/verify-code/:userID",
     element: (
       <Authenticated>
         <VerifyCode />
