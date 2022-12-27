@@ -87,8 +87,8 @@ export default function Signup() {
         if (user) {
           navigate(`/auth/verify-code/${user.userID}`);
         }
-        setLoading(false);
       }
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -183,7 +183,7 @@ export default function Signup() {
             </label>
             {loading && (
               <button type="button" disabled className={styles["submit__btn"]}>
-                <BeatLoader loading={loading} size={10} color={"#fff"} />
+                <BeatLoader loading={loading} size={10} color={"#000"} />
               </button>
             )}
             {!loading && (

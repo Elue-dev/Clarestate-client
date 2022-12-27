@@ -14,6 +14,7 @@ export default function VerifyCode() {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loading_sec, setLoading_sec] = useState(false);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [showInput, setShowInput] = useState(false);
@@ -64,18 +65,31 @@ export default function VerifyCode() {
   };
 
   const resendCode = async () => {
+    setEmailError(false);
+
     if (!email) {
       return setEmailError(true);
     } else {
-      setEmailError(true);
+      setEmailError(false);
     }
 
-    setLoading(true);
+    try {
+      setLoading_sec(true);
+      const response = await sendVerificationCode(email);
+      if (response) {
+        setShowInput(false);
+      }
+      setLoading_sec(false);
+    } catch (error) {
+      setLoading_sec(false);
+    }
+
+    setLoading_sec(true);
     const response = await sendVerificationCode(email);
-    if (response.status === "success") {
+    if (response) {
       setShowInput(false);
     }
-    setLoading(false);
+    setLoading_sec(false);
   };
 
   return (
@@ -135,13 +149,15 @@ export default function VerifyCode() {
             style={{
               position: "relative",
               transition: "left .3s ease",
-              left: showInput ? 0 : "-30rem",
+              left: showInput ? 0 : "-35rem",
             }}
           >
             <label className={styles["resend__label"]}>
               <div
                 className={styles["auth__wrap"]}
-                style={{ border: emailError ? "2px solid red" : "" }}
+                style={{
+                  border: emailError ? "2px solid red" : "",
+                }}
               >
                 <HiOutlineMail />
                 <input
@@ -155,16 +171,16 @@ export default function VerifyCode() {
               </div>
             </label>
 
-            {loading && (
+            {loading_sec && (
               <button
                 type="button"
                 disabled
                 className={`${styles["submit__btn"]} ${styles["resend__btn"]}`}
               >
-                <BeatLoader loading={loading} size={10} color={"#fff"} />
+                Processing...
               </button>
             )}
-            {!loading && (
+            {!loading_sec && (
               <button
                 type="button"
                 onClick={resendCode}

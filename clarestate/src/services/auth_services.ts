@@ -1,4 +1,5 @@
 import { registerType } from "@/types/auth_types";
+import { errorToast, successToast } from "../utils/alerts";
 import axios from "axios";
 
 //@ts-ignore
@@ -16,11 +17,12 @@ export const registerUser = async (credentials: registerType) => {
       `${server_url}/api/auth/signup`,
       credentials
     );
-    console.log(response.data);
-
+    if (response?.data.status === "success") {
+      successToast(response?.data.message, "rsuccess");
+    }
     return response.data;
   } catch (error: any) {
-    console.log(error.response.data.message);
+    errorToast(error.response.data.message, "rerror");
   }
 };
 
@@ -30,10 +32,12 @@ export const verifyEmail = async (code: string, userID: string | undefined) => {
       `${server_url}/api/auth/verify-email/${userID}`,
       { code }
     );
-    console.log(response.data);
+    if (response?.data.status === "success") {
+      successToast(response?.data.message, "vsuccess");
+    }
     return response.data;
   } catch (error: any) {
-    console.log(error.response.data.message);
+    errorToast(error.response.data.message, "veerror");
   }
 };
 
@@ -43,9 +47,11 @@ export const sendVerificationCode = async (email: string) => {
       `${server_url}/api/auth/send-verification-code`,
       { email }
     );
-    console.log(response.data);
+    if (response?.data.status === "success") {
+      successToast(response?.data.message, "svsuccess");
+    }
     return response.data;
   } catch (error: any) {
-    console.log(error.response.data.message);
+    errorToast(error.response.data.message, "sverror");
   }
 };

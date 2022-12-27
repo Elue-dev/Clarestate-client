@@ -1,11 +1,19 @@
 import { RouterProvider } from "react-router-dom";
 import { routes } from "./routes";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const user = false;
 
 function App() {
   return (
     <div>
+      <ToastContainer
+        toastStyle={{
+          backgroundColor: "rgba(44, 134, 179, 0.364)",
+          color: "#fff",
+        }}
+      />
       <RouterProvider router={routes} />
     </div>
   );
