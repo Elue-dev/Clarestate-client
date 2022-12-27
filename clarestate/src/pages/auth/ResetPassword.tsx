@@ -1,6 +1,6 @@
 import { useState, useRef, FormEvent, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { RiLockPasswordLine } from "react-icons/ri";
+import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BeatLoader } from "react-spinners";
 import styles from "./auth.module.scss";
@@ -57,7 +57,7 @@ export default function ResetPassword() {
             <label>
               <span>New Password</span>
               <div className={styles["password__field"]}>
-                <RiLockPasswordLine />
+                <MdOutlinePassword />
                 <input
                   type="password"
                   name="newPassword"
@@ -67,19 +67,19 @@ export default function ResetPassword() {
                   placeholder="Enter your email or phone number"
                 />
 
-                <span onClick={handlePasswordVisibility}>
+                <b onClick={handlePasswordVisibility}>
                   {visible ? (
                     <AiOutlineEye size={20} />
                   ) : (
                     <AiOutlineEyeInvisible size={20} />
                   )}
-                </span>
+                </b>
               </div>
             </label>
             <label>
               <span>Confirm New Password</span>
               <div className={styles["password__field"]}>
-                <RiLockPasswordLine />
+                <MdOutlinePassword />
                 <input
                   type="password"
                   name="confirmNewPassword"
@@ -89,13 +89,13 @@ export default function ResetPassword() {
                   placeholder="At least 6 characters"
                 />
 
-                <span onClick={handleConfirmPasswordVisibility}>
+                <b onClick={handleConfirmPasswordVisibility}>
                   {visible_sec ? (
                     <AiOutlineEye size={20} />
                   ) : (
                     <AiOutlineEyeInvisible size={20} />
                   )}
-                </span>
+                </b>
               </div>
             </label>
             {loading && (

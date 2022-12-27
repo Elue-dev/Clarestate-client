@@ -13,6 +13,7 @@ specifiers:
   pnpm: ^7.17.1
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-hook-form: ^7.41.1
   react-icons: ^4.6.0
   react-quill: ^2.0.0
   react-redux: ^8.0.5
@@ -23,6 +24,7 @@ specifiers:
   toolkit: link:@types/@reduxjs/toolkit
   typescript: ^4.6.4
   vite: ^3.2.3
+  yup: link:@hookform/resolvers/yup
 
 dependencies:
   '@reduxjs/toolkit': 1.9.1_k4ae6lp43ej6mezo3ztvx6pykq
@@ -33,6 +35,7 @@ dependencies:
   pnpm: 7.20.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-hook-form: 7.41.1_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
   react-quill: 2.0.0_biqbaboplfbrettd7655fr4n2y
   react-redux: 8.0.5_ie75ejlwqy5zh3tldgt7pftwcu
@@ -40,6 +43,7 @@ dependencies:
   react-spinners: 0.13.7_biqbaboplfbrettd7655fr4n2y
   redux-persist: 6.0.0_react@18.2.0
   sass: 1.57.1
+  yup: link:@hookform/resolvers/yup
 
 devDependencies:
   '@types/react': 18.0.26
@@ -1249,6 +1253,15 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-hook-form/7.41.1_react@18.2.0:
+    resolution: {integrity: sha512-IHUozfwuqE+P201KIJwotMd+UCKqzIprseR8UUjz1jRupkZeubg0xyeMLIaT192zHv7vBBu9bibpNV5cIB4E9g==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-icons/4.7.1_react@18.2.0:

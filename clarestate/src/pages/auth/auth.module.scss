@@ -11,10 +11,22 @@
       @include flexBox(center, center, column);
       background: #f4f4f4;
       h1 {
-        padding-bottom: 1rem;
+        padding-bottom: 2rem;
         text-transform: uppercase;
         color: $color-primary;
         letter-spacing: 2px;
+      }
+      .alert {
+        text-align: center;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        width: 400px;
+      }
+      .error__msg {
+        background: pink;
+        color: crimson;
       }
       form {
         max-width: 100%;
@@ -22,10 +34,16 @@
           display: block;
           margin-bottom: 1rem;
           width: 400px;
+          &:focus {
+            .auth__wrap {
+              display: none;
+              border: 2px solid $color-primary;
+            }
+          }
           span {
             display: block;
             padding-bottom: 0.8rem;
-            font-weight: 600;
+            font-weight: 400;
           }
           input {
             font-size: 14px;
@@ -40,12 +58,13 @@
 
           .password__field {
             @include flexBox(center, center, row);
-            border: 1px solid #333;
+            border: 1px solid darkgray;
             border-radius: 0.3rem;
             padding: 0 0.8rem;
             :first-child {
               font-size: 1.4rem;
               display: block;
+              color: darkgray;
             }
             input {
               border: 0;
@@ -57,13 +76,13 @@
           }
           .auth__wrap {
             display: flex;
-            border: 1px solid rgb(67, 67, 67);
+            border: 1px solid darkgray;
             @include flexBox(flex-start, center, row);
             border-radius: 0.3rem;
             padding: 0 0.8rem;
             :first-child {
               font-size: 1.4rem;
-              color: #000;
+              color: darkgray;
             }
           }
         }
@@ -98,8 +117,10 @@
           padding-left: 12px;
           height: 45px;
           outline: 0;
+          border: 1px solid darkgray;
           font-size: 1.3rem;
           font-weight: 700;
+          background: transparent;
         }
       }
       .clear {

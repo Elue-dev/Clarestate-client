@@ -1,8 +1,8 @@
 import { useState, useRef, FormEvent, ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginType } from "@/types/auth_types";
-import { MdOutlineMail } from "react-icons/md";
-import { RiLockPasswordLine } from "react-icons/ri";
+import { HiOutlineMail } from "react-icons/hi";
+import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "./auth.module.scss";
 import { BeatLoader } from "react-spinners";
@@ -48,7 +48,7 @@ export default function Login() {
             <label>
               <span>Email or Phone Number</span>
               <div className={styles["auth__wrap"]}>
-                <MdOutlineMail />
+                <HiOutlineMail />
                 <input
                   type="email"
                   name="emailOrPhone"
@@ -61,7 +61,7 @@ export default function Login() {
             <label>
               <span>Password</span>
               <div className={styles["password__field"]}>
-                <RiLockPasswordLine />
+                <MdOutlinePassword />
                 <input
                   type="password"
                   name="password"
@@ -71,13 +71,13 @@ export default function Login() {
                   placeholder="At least 6 characters"
                 />
 
-                <span onClick={handlePasswordVisibility}>
+                <b onClick={handlePasswordVisibility}>
                   {visible ? (
                     <AiOutlineEye size={20} />
                   ) : (
                     <AiOutlineEyeInvisible size={20} />
                   )}
-                </span>
+                </b>
               </div>
               <br />
               <p

@@ -1,6 +1,6 @@
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { MdOutlineMail } from "react-icons/md";
+import { HiOutlineMail } from "react-icons/hi";
 import styles from "./auth.module.scss";
 import { BeatLoader } from "react-spinners";
 
@@ -25,7 +25,7 @@ export default function ForgotPassword() {
             <label>
               <span>Email </span>
               <div className={styles["auth__wrap"]}>
-                <MdOutlineMail />
+                <HiOutlineMail />
                 <input
                   type="email"
                   value={email}
