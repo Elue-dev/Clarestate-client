@@ -6,13 +6,14 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import VerifyCode from "./pages/auth/VerifyCode";
 import Unauthenticated from "./components/protect_routes/unauthenticated";
+import Home from "./pages/home/Home";
 
 export const routes = createBrowserRouter([
   {
     path: "/",
     element: (
       <Unauthenticated>
-        <>Home</>
+        <Home />
       </Unauthenticated>
     ),
   },

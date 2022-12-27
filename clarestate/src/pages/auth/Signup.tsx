@@ -8,8 +8,6 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "./auth.module.scss";
 import { BeatLoader } from "react-spinners";
 import { registerUser, validateEmail } from "../../services/auth_services";
-import { useDispatch } from "react-redux";
-import { SET_USER_TOKEN } from "@/redux/slices/auth_slice";
 
 const initialState: registerType = {
   first_name: "",

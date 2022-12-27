@@ -1,4 +1,4 @@
-import { registerType } from "@/types/auth_types";
+import { loginType, registerType } from "@/types/auth_types";
 import { errorToast, successToast } from "../utils/alerts";
 import axios from "axios";
 
@@ -53,5 +53,20 @@ export const sendVerificationCode = async (email: string) => {
     return response.data;
   } catch (error: any) {
     errorToast(error.response.data.message, "sverror");
+  }
+};
+
+export const loginUser = async (credentials: loginType) => {
+  try {
+    const response = await axios.post(
+      `${server_url}/api/auth/login`,
+      credentials
+    );
+    if (response?.data.status === "success") {
+      successToast(response?.data.message, "rsuccess");
+    }
+    return response.data;
+  } catch (error: any) {
+    errorToast(error.response.data.message, "rerror");
   }
 };

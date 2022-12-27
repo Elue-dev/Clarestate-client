@@ -5,6 +5,9 @@ import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BeatLoader } from "react-spinners";
+import { useDispatch } from "react-redux";
+import { SET_ACTIVE_USER, SET_USER_TOKEN } from "../../redux/slices/auth_slice";
+import { loginUser } from "../../services/auth_services";
 import styles from "./auth.module.scss";
 
 const initialState: loginType = {
@@ -19,6 +22,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const passwordRef = useRef<any | undefined>();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { emailOrPhone, password } = credentials;
 
@@ -48,11 +52,24 @@ export default function Login() {
     }
   };
 
-  const loginUser = (e: FormEvent): void => {
+  const signinUser = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      console.log("form submitted");
+    try {
+      setLoading(true);
+      setError("");
+      if (validateForm()) {
+        const response = await loginUser(credentials);
+        if (response) {
+          dispatch(SET_ACTIVE_USER(response.user));
+          dispatch(SET_USER_TOKEN(response.token));
+          navigate("/");
+        }
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
   };
 
@@ -64,13 +81,13 @@ export default function Login() {
           {error && (
             <p className={`${styles.alert} ${styles["error__msg"]}`}>{error}</p>
           )}
-          <form onSubmit={loginUser}>
+          <form onSubmit={signinUser}>
             <label>
               <span>Email or Phone Number</span>
               <div className={styles["auth__wrap"]}>
                 <HiOutlineMail />
                 <input
-                  type="email"
+                  type="text"
                   name="emailOrPhone"
                   value={emailOrPhone}
                   onChange={handleInputChange}
