@@ -7,6 +7,7 @@ import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "./auth.module.scss";
 import { BeatLoader } from "react-spinners";
+import { validateEmail } from "../../services/auth_services";
 
 const initialState: registerType = {
   firstName: "",
@@ -29,14 +30,28 @@ export default function Signup() {
   const validateForm = () => {
     if (!firstName) {
       setError("First Name is required");
+      setTimeout(() => setError(""), 4000);
+      return;
     } else if (!lastName) {
       setError("Last Name is required");
+      setTimeout(() => setError(""), 4000);
+      return;
     } else if (!phone || !/^\d+$/.test(phone)) {
       setError("Phonne Number is required and must be numbers");
+      setTimeout(() => setError(""), 4000);
+      return;
     } else if (!email) {
-      setError("Email is required");
+      setError("Email Address is required");
+      setTimeout(() => setError(""), 4000);
+      return;
+    } else if (!validateEmail(email)) {
+      setError("Please enter a valid email address");
+      setTimeout(() => setError(""), 4000);
+      return;
     } else if (!password) {
       setError("Password is required");
+      setTimeout(() => setError(""), 4000);
+      return;
     } else {
       setError("");
     }

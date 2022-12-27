@@ -5,6 +5,7 @@ import styles from "./auth.module.scss";
 export default function VerifyCode() {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (element: any, index: number) => {
     if (isNaN(element.value)) return false;
@@ -16,17 +17,24 @@ export default function VerifyCode() {
     }
   };
 
+  const clearField = () => {
+    setError("");
+    setOtp([...otp.map((v) => "")]);
+  };
+
   const verifyCode = (e: FormEvent): void => {
     e.preventDefault();
+    setError("");
 
     const OTP = otp.join("");
     if (OTP.length === 0) {
-      return alert("error");
+      return setError("Please enter your verification code");
     } else if (OTP.length < 6) {
-      return alert("invalid otp");
+      return setError("You verification code should be 6 digits");
+    } else {
+      setError("");
     }
 
-    console.log(OTP.length);
     setOtp([...otp.map((v) => "")]);
   };
 
@@ -37,6 +45,12 @@ export default function VerifyCode() {
           <h1>Verify Registration Code</h1>
           <form onSubmit={verifyCode}>
             <p>Please enter the verification code sent to your email</p>
+            <br />
+            {error && (
+              <p className={`${styles.alert} ${styles["error__msg"]}`}>
+                {error}
+              </p>
+            )}
             <div className={styles["otp__wrapper"]}>
               {otp.map((data, index) => {
                 return (
@@ -54,10 +68,7 @@ export default function VerifyCode() {
                 );
               })}
             </div>
-            <p
-              className={styles.clear}
-              onClick={(e) => setOtp([...otp.map((v) => "")])}
-            >
+            <p className={styles.clear} onClick={clearField}>
               Clear All
             </p>
             {loading && (

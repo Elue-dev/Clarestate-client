@@ -4,8 +4,8 @@ import { loginType } from "@/types/auth_types";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import styles from "./auth.module.scss";
 import { BeatLoader } from "react-spinners";
+import styles from "./auth.module.scss";
 
 const initialState: loginType = {
   emailOrPhone: "",
@@ -16,10 +16,23 @@ export default function Login() {
   const [credentials, setCredentials] = useState(initialState);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const passwordRef = useRef<any | undefined>();
   const navigate = useNavigate();
 
   const { emailOrPhone, password } = credentials;
+
+  const validateForm = () => {
+    if (!emailOrPhone) {
+      return setError("Email or Phone Number is required");
+    } else if (!password) {
+      return setError("Password is required");
+    } else {
+      setError("");
+    }
+
+    return true;
+  };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -37,6 +50,10 @@ export default function Login() {
 
   const loginUser = (e: FormEvent): void => {
     e.preventDefault();
+
+    if (validateForm()) {
+      console.log("form submitted");
+    }
   };
 
   return (
@@ -44,6 +61,9 @@ export default function Login() {
       <div className={styles["auth__wrapper"]}>
         <div className={styles["left__section"]}>
           <h1>Log Into Your Account</h1>
+          {error && (
+            <p className={`${styles.alert} ${styles["error__msg"]}`}>{error}</p>
+          )}
           <form onSubmit={loginUser}>
             <label>
               <span>Email or Phone Number</span>

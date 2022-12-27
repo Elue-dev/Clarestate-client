@@ -7,10 +7,15 @@ import { BeatLoader } from "react-spinners";
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const sendResetEmail = (e: FormEvent): void => {
     e.preventDefault();
+
+    if (!email) {
+      return setError("Please enter your email address");
+    }
   };
 
   return (
@@ -22,6 +27,12 @@ export default function ForgotPassword() {
             <p className={styles.info}>
               Ensure to check your spam folder. It may end up there.
             </p>
+            <br />
+            {error && (
+              <p className={`${styles.alert} ${styles["error__msg"]}`}>
+                {error}
+              </p>
+            )}
             <label>
               <span>Email </span>
               <div className={styles["auth__wrap"]}>
