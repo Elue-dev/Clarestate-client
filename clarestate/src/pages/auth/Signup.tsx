@@ -6,6 +6,7 @@ import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "./auth.module.scss";
+import { BeatLoader } from "react-spinners";
 
 const initialState: registerType = {
   firstName: "",
@@ -15,15 +16,17 @@ const initialState: registerType = {
 };
 
 export default function Signup() {
-  const [values, setValues] = useState(initialState);
+  const [credentials, setCredentials] = useState(initialState);
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const passwordRef = useRef<any | undefined>();
 
-  const { firstName, lastName, email, password } = values;
+  const { firstName, lastName, email, password } = credentials;
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+    setCredentials({ ...credentials, [name]: value });
   };
 
   const handlePasswordVisibility = (): void => {
@@ -106,23 +109,16 @@ export default function Signup() {
                 </span>
               </div>
             </label>
-            {/* {loading && (
-              <button type="button" disabled className="btn submit__btn">
+            {loading && (
+              <button type="button" disabled className={styles["submit__btn"]}>
                 <BeatLoader loading={loading} size={10} color={"#fff"} />
               </button>
             )}
             {!loading && (
-              <button
-                type="submit"
-                className="btn submit__btn"
-                onClick={registerUser}
-              >
+              <button type="submit" className={styles["submit__btn"]}>
                 Continue
               </button>
-            )} */}
-            <button type="submit" className={styles["submit__btn"]}>
-              Continue
-            </button>
+            )}
             <div className={styles["auth__redirect"]}>
               <p>
                 Own a Clarestate Account? <Link to="/auth/login">Login</Link>

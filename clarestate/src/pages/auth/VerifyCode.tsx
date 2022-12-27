@@ -1,8 +1,10 @@
 import { FormEvent, useState } from "react";
+import { BeatLoader } from "react-spinners";
 import styles from "./auth.module.scss";
 
 export default function VerifyCode() {
   const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (element: any, index: number) => {
     if (isNaN(element.value)) return false;
@@ -25,6 +27,7 @@ export default function VerifyCode() {
     }
 
     console.log(OTP.length);
+    setOtp([...otp.map((v) => "")]);
   };
 
   return (
@@ -57,9 +60,16 @@ export default function VerifyCode() {
             >
               Clear All
             </p>
-            <button type="submit" className={styles["submit__btn"]}>
-              Verify
-            </button>
+            {loading && (
+              <button type="button" disabled className={styles["submit__btn"]}>
+                <BeatLoader loading={loading} size={10} color={"#fff"} />
+              </button>
+            )}
+            {!loading && (
+              <button type="submit" className={styles["submit__btn"]}>
+                Verify
+              </button>
+            )}
           </form>
         </div>
         <div className={styles["right__section"]}>

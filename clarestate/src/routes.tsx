@@ -33,7 +33,7 @@ export const routes = createBrowserRouter([
     ),
   },
   {
-    path: "/auth/forgot-pssword",
+    path: "/auth/forgot-password",
     element: (
       <Authenticated>
         <ForgotPassword />

@@ -1,10 +1,11 @@
 import { useState, useRef, FormEvent, ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginType } from "@/types/auth_types";
 import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "./auth.module.scss";
+import { BeatLoader } from "react-spinners";
 
 const initialState: loginType = {
   emailOrPhone: "",
@@ -12,15 +13,17 @@ const initialState: loginType = {
 };
 
 export default function Login() {
-  const [values, setValues] = useState(initialState);
+  const [credentials, setCredentials] = useState(initialState);
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const passwordRef = useRef<any | undefined>();
+  const navigate = useNavigate();
 
-  const { emailOrPhone, password } = values;
+  const { emailOrPhone, password } = credentials;
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+    setCredentials({ ...credentials, [name]: value });
   };
 
   const handlePasswordVisibility = (): void => {
@@ -76,24 +79,25 @@ export default function Login() {
                   )}
                 </span>
               </div>
+              <br />
+              <p
+                onClick={() => navigate("/auth/forgot-password")}
+                style={{ cursor: "pointer", textAlign: "right" }}
+              >
+                Forgot Password?
+              </p>
             </label>
-            {/* {loading && (
-              <button type="button" disabled className="btn submit__btn">
+            {loading && (
+              <button type="button" disabled className={styles["submit__btn"]}>
                 <BeatLoader loading={loading} size={10} color={"#fff"} />
               </button>
             )}
             {!loading && (
-              <button
-                type="submit"
-                className="btn submit__btn"
-                onClick={registerUser}
-              >
+              <button type="submit" className={styles["submit__btn"]}>
                 Continue
               </button>
-            )} */}
-            <button type="submit" className={styles["submit__btn"]}>
-              Continue
-            </button>
+            )}
+
             <div className={styles["auth__redirect"]}>
               <p>
                 New to Clarestate Account?{" "}
