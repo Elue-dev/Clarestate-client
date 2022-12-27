@@ -3,7 +3,15 @@ import { getUser } from "../../redux/slices/auth_slice";
 
 export default function Home() {
   const user: any = useSelector(getUser);
-  console.log(user);
+  const { first_name, last_name } = user;
 
-  return <div>Hi {user.first_name}</div>;
+  const first = first_name.substring(0, 1);
+  const last = last_name.substring(0, 1);
+  const initials = first + last;
+
+  return (
+    <div>
+      Hi, <b style={{ textTransform: "uppercase" }}>{initials}</b>
+    </div>
+  );
 }
