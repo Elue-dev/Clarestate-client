@@ -4,7 +4,7 @@ import { RootState } from "../store";
 const initialState = {
   isLoggedIn: false,
   user: null,
-  token: "",
+  token: null,
 };
 
 const auth_slice = createSlice({

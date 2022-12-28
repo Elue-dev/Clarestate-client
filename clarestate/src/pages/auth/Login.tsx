@@ -126,7 +126,7 @@ export default function Login() {
             </label>
             {loading && (
               <button type="button" disabled className={styles["submit__btn"]}>
-                <BeatLoader loading={loading} size={10} color={"#fff"} />
+                <BeatLoader loading={loading} size={10} color={"#000"} />
               </button>
             )}
             {!loading && (

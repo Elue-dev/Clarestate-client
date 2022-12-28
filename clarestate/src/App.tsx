@@ -11,6 +11,7 @@ function App() {
           backgroundColor: "rgba(44, 134, 179, 0.364)",
           color: "#fff",
         }}
+        position="bottom-right"
       />
       <RouterProvider router={routes} />
     </div>

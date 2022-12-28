@@ -70,3 +70,11 @@ export const loginUser = async (credentials: loginType) => {
     errorToast(error.response.data.message, "rerror");
   }
 };
+
+export const logoutUser = async () => {
+  try {
+    await axios.get(`${server_url}/api/auth/logout`);
+  } catch (error: any) {
+    errorToast(error.response.data.message, "loerror");
+  }
+};
