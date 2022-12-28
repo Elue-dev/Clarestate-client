@@ -22,7 +22,7 @@ export default function ForgotPassword() {
     <section className={styles.auth}>
       <div className={styles["auth__wrapper"]}>
         <div className={styles["left__section"]}>
-          <h1>Forgot Password</h1>
+          <h1>Let's get you back!</h1>
           <form onSubmit={sendResetEmail}>
             <p className={styles.info}>
               Ensure to check your spam folder. It may end up there.
