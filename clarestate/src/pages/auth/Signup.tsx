@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { registerType } from "@/types/auth_types";
 import { TiUserOutline } from "react-icons/ti";
 import { HiOutlineMail } from "react-icons/hi";
+import { TbPhone } from "react-icons/tb";
 import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "./auth.module.scss";
@@ -131,7 +132,7 @@ export default function Signup() {
             <label>
               <span>Phone Number</span>
               <div className={styles["auth__wrap"]}>
-                <TiUserOutline />
+                <TbPhone />
                 <input
                   type="tel"
                   name="phone"

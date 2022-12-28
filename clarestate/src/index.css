@@ -19,3 +19,12 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+a {
+  color: #333;
+  text-decoration: none;
+}
+a.active {
+  font-weight: 700;
+  border-bottom: 4px solid rgb(237, 182, 55);
+}
