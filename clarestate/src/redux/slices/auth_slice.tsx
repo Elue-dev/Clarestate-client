@@ -18,6 +18,7 @@ const auth_slice = createSlice({
     REMOVE_ACTIVE_USER: (state) => {
       state.isLoggedIn = false;
       state.user = null;
+      state.token = null;
     },
     SET_USER_TOKEN: (state, action) => {
       state.token = action.payload;
