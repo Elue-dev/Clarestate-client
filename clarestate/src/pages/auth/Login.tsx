@@ -137,7 +137,7 @@ export default function Login() {
 
             <div className={styles["auth__redirect"]}>
               <p>
-                New to Clarestate Account?{" "}
+                Need a Clarestate Account?{" "}
                 <Link to="/auth/register">Register</Link>
               </p>
             </div>

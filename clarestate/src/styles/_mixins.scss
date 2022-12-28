@@ -19,3 +19,9 @@
   grid-template-columns: $tempCol;
   gap: $gap;
 }
+
+@mixin mQ($respond) {
+  @media (max-width: $respond) {
+    @content;
+  }
+}

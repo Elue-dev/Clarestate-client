@@ -2,13 +2,14 @@ import {
   sendVerificationCode,
   verifyEmail,
 } from "../../services/auth_services";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 import styles from "./auth.module.scss";
 import { useDispatch } from "react-redux";
 import { SET_ACTIVE_USER, SET_USER_TOKEN } from "../../redux/slices/auth_slice";
 import { HiOutlineMail } from "react-icons/hi";
+import { protectVerify } from "../../utils/junk";
 
 export default function VerifyCode() {
   const [otp, setOtp] = useState(new Array(6).fill(""));
@@ -21,6 +22,10 @@ export default function VerifyCode() {
   const { userID } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    protectVerify(userID);
+  }, []);
 
   const handleChange = (element: any, index: number) => {
     if (isNaN(element.value)) return false;

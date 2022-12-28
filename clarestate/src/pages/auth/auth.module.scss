@@ -6,8 +6,15 @@
   color: #333;
   .auth__wrapper {
     display: flex;
+    @include mQ(700px) {
+      flex-direction: column;
+    }
     .left__section {
       width: 50%;
+      @include mQ(700px) {
+        width: 100%;
+        height: 100vh;
+      }
       @include flexBox(center, center, column);
       background: #f4f4f4;
       h1 {
@@ -164,6 +171,9 @@
         height: 100%;
         width: 100%;
         background: rgba(0, 0, 0, 0.3);
+      }
+      @include mQ(700px) {
+        display: none;
       }
     }
   }

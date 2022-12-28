@@ -5,11 +5,17 @@ import {
   REMOVE_ACTIVE_USER,
   SET_USER_TOKEN,
 } from "../../redux/slices/auth_slice";
+import { useEffect } from "react";
 
 export default function Home() {
   const user: any = useSelector(getUser);
   const { first_name, last_name } = user;
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(REMOVE_ACTIVE_USER());
+    dispatch(SET_USER_TOKEN(null));
+  });
 
   const first = first_name.substring(0, 1);
   const last = last_name.substring(0, 1);
