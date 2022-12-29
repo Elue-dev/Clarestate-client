@@ -51,6 +51,37 @@
       padding: 4px 10px;
     }
   }
+  form {
+    padding-top: 0.7rem;
+    select {
+      padding: 0.7rem 4rem;
+      outline: 0;
+      cursor: pointer;
+      transition: border 0.6s ease;
+      font-size: 1.1rem;
+      &:focus {
+        border: 3px solid rgba(2, 2, 122, 0.774);
+      }
+    }
+    button {
+      padding: 0.4rem 3rem;
+      border-radius: 4px;
+      background: $color-secondary;
+      outline: 0;
+      border: 1px solid $color-secondary;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    .select__wrapper {
+      display: flex;
+      .select__purpose {
+        color: #000;
+        cursor: pointer;
+        width: 60%;
+      }
+    }
+  }
 }
 
 @include mQ(1200px) {

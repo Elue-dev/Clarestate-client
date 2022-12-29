@@ -6,21 +6,33 @@ import { MdDateRange, MdFeaturedPlayList } from "react-icons/md";
 import { ImLocation2 } from "react-icons/im";
 import { BsCamera } from "react-icons/bs";
 import styles from "./properties.module.scss";
+import { useDispatch } from "react-redux";
+import { GET_CAREGORIES } from "../../redux/slices/property_slice";
 
 export default function Properties() {
+  const dispatch = useDispatch();
+
   const fetchProperties = async () => {
     return await axios.get(`${server_url}/api/properties`);
   };
 
-  const { data, isLoading, error } = useQuery("properties", fetchProperties, {
-    refetchOnWindowFocus: false,
-  });
+  const { data, isLoading, isSuccess } = useQuery(
+    "properties",
+    fetchProperties,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
 
   const properties = data?.data.properties;
+
+  if (isSuccess) {
+    dispatch(GET_CAREGORIES(properties));
+  }
 
   return (
     <>

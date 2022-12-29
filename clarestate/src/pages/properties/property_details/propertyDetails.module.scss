@@ -83,11 +83,9 @@
   .left__contents {
     width: 70%;
     .property__details__images {
-      // display: grid;
-      // grid-template-columns: repeat(3, 1fr);
       display: flex;
       overflow-x: auto;
-      column-gap: 0.5rem;
+      column-gap: 0.1rem;
       position: relative;
       cursor: pointer;
       .image__length {
@@ -338,8 +336,7 @@
     .bookmark__btn {
       @include button();
       width: auto;
-      color: #fff;
-      background: #222;
+      background-color: $color-secondary;
       font-weight: 700;
       padding: 0.5rem 1rem;
       margin-top: 0.7rem;

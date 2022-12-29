@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCommentMedical, FaUserEdit } from "react-icons/fa";
 import { MdOutlineDateRange } from "react-icons/md";
-import { GoCommentDiscussion } from "react-icons/go";
+import { FaRegComment } from "react-icons/fa";
 import { BiDotsHorizontal } from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import styles from "./comments.module.scss";
@@ -52,7 +52,6 @@ export default function Comments({ propertyID, slug }: idType) {
   }
 
   const comments = data?.data.comments;
-  console.log(comments);
 
   const wrapper = showComments
     ? `${styles["comments__section__details"]}`
@@ -87,11 +86,13 @@ export default function Comments({ propertyID, slug }: idType) {
     if (!comment) window.scrollTo(0, 0);
     try {
       setLoading(true);
-      await createComment(propertyID, { comment }, token);
-      setShowCommentForm(false);
-      setComment("");
-      window.scrollTo(0, 0);
-     setTimeout(() => location.assign(`/property/${slug}`), 1500)
+      const response = await createComment(propertyID, { comment }, token);
+      if (response) {
+        setShowCommentForm(false);
+        setComment("");
+        window.scrollTo(0, 0);
+        setTimeout(() => location.assign(`/property/${slug}`), 1500);
+      }
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -104,7 +105,7 @@ export default function Comments({ propertyID, slug }: idType) {
       <div className={wrapper}>
         <h2 onClick={hanndleShowComments}>
           <span>
-            <GoCommentDiscussion />
+            <FaRegComment />
             COMMENTS ({comments.length})
           </span>
 
@@ -139,12 +140,18 @@ export default function Comments({ propertyID, slug }: idType) {
                     <FaUserEdit /> {`${user.first_name} ${user.last_name}`}
                   </div>
                   <div className={styles["comment__date"]}>
-                    <MdOutlineDateRange />
-                    {new Date(createdAt).toDateString()}
+                    {currentUser?._id === user._id ? (
+                      <>
+                        <MdOutlineDateRange />
+                        Added by you on {new Date(createdAt).toDateString()}
+                      </>
+                    ) : (
+                      <>
+                        <MdOutlineDateRange />
+                        {new Date(createdAt).toDateString()}
+                      </>
+                    )}
                   </div>
-                  {currentUser._id === user._id && (
-                    <h3>You added this comment</h3>
-                  )}
                 </li>
               </ul>
             );

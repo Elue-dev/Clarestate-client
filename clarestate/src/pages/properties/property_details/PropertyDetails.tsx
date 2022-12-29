@@ -77,7 +77,7 @@ export default function PropertyDetail() {
   };
 
   const { data, isLoading, error } = useQuery("properties", fetchProperties, {
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
   });
 
   if (isLoading) {
@@ -85,7 +85,6 @@ export default function PropertyDetail() {
   }
 
   const property = data?.data.property;
-  //   console.log(property);
 
   if (!property) {
     return <h1>Loading...</h1>;
@@ -184,12 +183,13 @@ export default function PropertyDetail() {
               </p>
               <p>
                 <AiOutlineCalendar />
-                <b>Date Added:</b> {property.addedAt}
+                <b>Date Added:</b> {new Date(property.createdAt).toDateString()}
               </p>
 
               <p>
                 <FaRegEdit />
-                <b>Last Updated:</b> {property.editedAt}
+                <b>Last Updated:</b>{" "}
+                {new Date(property.updatedAt).toDateString()}
               </p>
 
               <span>
@@ -219,7 +219,7 @@ export default function PropertyDetail() {
             </div>
 
             <div className={styles["property__features"]}>
-              <h2>What does this property offer?</h2>
+              <h2>Features</h2>
               <div className={styles["flex__features"]}>
                 {property.features.map((feature: string, index: number) => (
                   <ul key={index}>
@@ -299,6 +299,40 @@ export default function PropertyDetail() {
           </div>
           <div className={styles["right__contents"]}>
             <div>
+              <h1>Reviews</h1>
+              {property.reviews.length > 0 ? (
+                property.reviews?.map((customerReview: any, index: number) => {
+                  const { rating, review, user, createdAt } = customerReview;
+
+                  return (
+                    <div key={index} className={styles.review}>
+                      <br />
+                      <StarRatings
+                        rating={rating}
+                        starDimension="30px"
+                        starRatedColor="gold"
+                        starSpacing="3px"
+                      />
+                      <p>{review}</p>
+                      <span>
+                        <b>{new Date(createdAt).toDateString()}</b>
+                      </span>
+                      <br />
+                      <span>
+                        <img src={user?.photo} alt={user?.first_name} />
+                      </span>
+                      <br />
+                      <span>
+                        <b>By: {`${user?.first_name} ${user?.last_name}`}</b>
+                      </span>
+                    </div>
+                  );
+                })
+              ) : (
+                <h2>No reviews for this property yet.</h2>
+              )}
+            </div>
+            <div>
               <h3>Need to reach out?</h3>
               <form>
                 <label>
@@ -362,37 +396,7 @@ export default function PropertyDetail() {
                 provided. We promise not to spam you.
               </p>
             </div>
-            {property.reviews.length > 0 ? (
-              property.reviews?.map((customerReview: any, index: number) => {
-                const { rating, review, user, createdAt } = customerReview;
 
-                return (
-                  <div key={index} className={styles.review}>
-                    <br />
-                    <StarRatings
-                      rating={rating}
-                      starDimension="30px"
-                      starRatedColor="gold"
-                      starSpacing="3px"
-                    />
-                    <p>{review}</p>
-                    <span>
-                      <b>{new Date(createdAt).toDateString()}</b>
-                    </span>
-                    <br />
-                    <span>
-                      <img src={user?.photo} alt={user?.first_name} />
-                    </span>
-                    <br />
-                    <span>
-                      <b>By: {`${user?.first_name} ${user?.last_name}`}</b>
-                    </span>
-                  </div>
-                );
-              })
-            ) : (
-              <h2>No reviews for this property yet.</h2>
-            )}
             {/* <SimilarProducts /> */}
           </div>
         </div>

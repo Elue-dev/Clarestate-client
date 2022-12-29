@@ -8,6 +8,7 @@ import ResetPassword from "../pages/auth/ResetPassword";
 import VerifyCode from "../pages/auth/VerifyCode";
 import Unauthenticated from "../components/protect_routes/unauthenticated";
 import PropertyDetail from "../pages/properties/property_details/PropertyDetails";
+import QueriedProperty from "../pages/properties/queried_properties/QueriedProperty";
 
 export default function AllRoutes() {
   return (
@@ -54,6 +55,8 @@ export default function AllRoutes() {
           </Authenticated>
         }
       />
+
+      <Route path="/property_search" element={<QueriedProperty />} />
       <Route path="*" element={<h1>PAGE NOT FOUND</h1>} />
     </Routes>
   );
