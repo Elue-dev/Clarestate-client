@@ -20,6 +20,7 @@ import {
 import { BiChevronsRight } from "react-icons/bi";
 import { MdMoreTime, MdSwipe } from "react-icons/md";
 import { FaUser, FaRegEdit } from "react-icons/fa";
+import StarRatings from "react-star-ratings";
 import styles from "./propertyDetails.module.scss";
 // import GoBack from "../utilities/GoBack";
 // import SimilarProducts from "./SimilarProducts";
@@ -36,6 +37,7 @@ import ReactWhatsapp from "react-whatsapp";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { server_url } from "../../../utils/junk";
+import Comments from "../../../components/properties/comments/Comments";
 
 export default function PropertyDetail() {
   const { slug } = useParams();
@@ -83,7 +85,7 @@ export default function PropertyDetail() {
   }
 
   const property = data?.data.property;
-  console.log(property);
+  //   console.log(property);
 
   if (!property) {
     return <h1>Loading...</h1>;
@@ -246,29 +248,16 @@ export default function PropertyDetail() {
                 <div className="admins">
                   <div className="admin__two">
                     <h3>{property.agentName}</h3>
-                    {/* <img
-                      src={property.agentCotact}
-                      alt={property.agentName}
-                    /> */}
-                    {/* <BsPatchCheckFill className={styles["verified__icon"]} /> */}
 
                     <a href={`tel:${property.agentCotact}`}>
                       <BsTelephoneForwardFill />
                       09052014239
                     </a>
-                    {/* <ReactWhatsapp
-                        number="234-905-201-4239"
-                        message={`Hi, i am from Ary Homes website, i want to make an inquiry about ${property.name}...`}
-                        className="whatsapp"
-                      >
-                        <TbBrandWhatsapp />
-                        <span>MESSAGE</span>
-                      </ReactWhatsapp> */}
                   </div>
                 </div>
               </div>
             </div>
-            {/* <Comments id={id} /> */}
+            <Comments propertyID={property._id} />
             <div className={styles["save__for__later"]}>
               {alert && (
                 <p
@@ -373,6 +362,37 @@ export default function PropertyDetail() {
                 provided. We promise not to spam you.
               </p>
             </div>
+            {property.reviews.length > 0 ? (
+              property.reviews?.map((customerReview: any, index: number) => {
+                const { rating, review, user, createdAt } = customerReview;
+
+                return (
+                  <div key={index} className={styles.review}>
+                    <br />
+                    <StarRatings
+                      rating={rating}
+                      starDimension="30px"
+                      starRatedColor="gold"
+                      starSpacing="3px"
+                    />
+                    <p>{review}</p>
+                    <span>
+                      <b>{new Date(createdAt).toDateString()}</b>
+                    </span>
+                    <br />
+                    <span>
+                      <img src={user?.photo} alt={user?.first_name} />
+                    </span>
+                    <br />
+                    <span>
+                      <b>By: {`${user?.first_name} ${user?.last_name}`}</b>
+                    </span>
+                  </div>
+                );
+              })
+            ) : (
+              <h2>No reviews for this property yet.</h2>
+            )}
             {/* <SimilarProducts /> */}
           </div>
         </div>

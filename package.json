@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "react-star-ratings": "^2.3.0",
     "react-whatsapp": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/react-star-ratings": "^2.3.0"
   }
 }

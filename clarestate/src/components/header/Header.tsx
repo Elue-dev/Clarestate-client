@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BiHomeAlt, BiLogInCircle } from "react-icons/bi";
-import { HiOutlineHomeModern } from "react-icons/hi2";
+// import { HiOutlineHomeModern } from "react-icons/hi2";
 import { MdOutlinePermContactCalendar } from "react-icons/md";
 import { RiDashboardLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
@@ -63,6 +63,7 @@ export default function Header() {
 
   const logout = async () => {
     await logoutUser();
+    navigate("/");
     dispatch(REMOVE_ACTIVE_USER());
     dispatch(SET_USER_TOKEN(null));
   };
@@ -99,7 +100,7 @@ export default function Header() {
                 </NavLink>
                 <NavLink to="/all-properties">
                   <li>
-                    <HiOutlineHomeModern />
+                    {/* <HiOutlineHomeModern /> */}
                     <p>Properties</p>
                   </li>
                 </NavLink>
@@ -160,7 +161,7 @@ export default function Header() {
                         </p>
                         <p>
                           <BiLogInCircle />
-                          <p onClick={logout}>Log Out</p>
+                          <span onClick={logout}>Log Out</span>
                         </p>
                       </div>
                     )}
@@ -181,7 +182,7 @@ export default function Header() {
           </NavLink>
           <NavLink to="/all-properties">
             <li>
-              <HiOutlineHomeModern />
+              {/* <HiOutlineHomeModern /> */}
               <p>Properties</p>
             </li>
           </NavLink>
