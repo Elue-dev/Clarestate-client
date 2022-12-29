@@ -12,13 +12,9 @@ export default function Properties() {
     return await axios.get(`${server_url}/api/properties`);
   };
 
-  const { data, isSuccess, isLoading, error } = useQuery(
-    "properties",
-    fetchProperties,
-    {
-      refetchOnWindowFocus: true,
-    }
-  );
+  const { data, isLoading, error } = useQuery("properties", fetchProperties, {
+    refetchOnWindowFocus: false,
+  });
 
   if (isLoading) {
     return <h1>Loading...</h1>;
@@ -26,7 +22,6 @@ export default function Properties() {
 
   const properties = data?.data.properties;
 
-  console.log(data);
   return (
     <>
       <section className={styles.properties}>
@@ -45,7 +40,6 @@ export default function Properties() {
               availability,
               location,
               images,
-              features,
               slug,
             } = property;
             return (
@@ -90,11 +84,6 @@ export default function Properties() {
                       <p className={styles["property__price"]}>
                         <span>NGN{new Intl.NumberFormat().format(price)}</span>
                         /night
-                      </p>
-                      <p>
-                        {features.map((feature: string, index: number) => {
-                          <li key={index}>{feature}</li>;
-                        })}
                       </p>
                     </div>
                   </div>

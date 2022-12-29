@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BiHomeAlt, BiLogInCircle } from "react-icons/bi";
 import { HiOutlineHomeModern } from "react-icons/hi2";
-import { GrContactInfo } from "react-icons/gr";
+import { MdOutlinePermContactCalendar } from "react-icons/md";
 import { RiDashboardLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { CgMenuGridO } from "react-icons/cg";
@@ -11,6 +11,7 @@ import { FiUserPlus } from "react-icons/fi";
 import { NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { getUser } from "../../redux/slices/auth_slice";
 import { logoutUser } from "../../services/auth_services";
+import logo from "../../assets/logo2.jpg";
 import {
   REMOVE_ACTIVE_USER,
   SET_USER_TOKEN,
@@ -82,7 +83,7 @@ export default function Header() {
             <div className={styles["header__contents"]}>
               <div className={styles.logo}>
                 <Link to="/">
-                  {/* <img src={logo} alt="ary homes logo" /> */}
+                  <img src={logo} alt="clarestate logo" />
                 </Link>
                 <Link to="/">
                   <h2>Clarestate</h2>
@@ -104,7 +105,7 @@ export default function Header() {
                 </NavLink>
                 <NavLink to="/contact">
                   <li>
-                    <GrContactInfo color="red" />
+                    <MdOutlinePermContactCalendar />
                     <p>Contact</p>
                   </li>
                 </NavLink>
@@ -187,7 +188,7 @@ export default function Header() {
 
           <NavLink to="/contact">
             <li>
-              <GrContactInfo />
+              <MdOutlinePermContactCalendar />
               <p>Contact</p>
             </li>
           </NavLink>

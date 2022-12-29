@@ -7,11 +7,13 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
 import VerifyCode from "../pages/auth/VerifyCode";
 import Unauthenticated from "../components/protect_routes/unauthenticated";
+import PropertyDetail from "../pages/properties/property_details/PropertyDetails";
 
 export default function AllRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/property/:slug" element={<PropertyDetail />} />
       <Route
         path="/auth/login"
         element={

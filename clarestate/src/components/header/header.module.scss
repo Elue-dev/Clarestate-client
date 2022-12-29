@@ -52,6 +52,7 @@
         @include flexBox(center, center, row);
         text-transform: uppercase;
         gap: 0.2rem;
+        transition: all 0.5s ease;
         :nth-child(1) {
           //   color: $color-primary;
           font-size: 1.3rem;
@@ -91,6 +92,7 @@
       }
       .user__initials {
         font-size: 1rem;
+        font-weight: 700;
         background: rgb(19, 26, 88);
         color: #fff;
         height: 33px;
