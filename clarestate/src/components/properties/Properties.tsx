@@ -7,7 +7,8 @@ import { ImLocation2 } from "react-icons/im";
 import { BsCamera } from "react-icons/bs";
 import styles from "./properties.module.scss";
 import { useDispatch } from "react-redux";
-import { GET_CAREGORIES } from "../../redux/slices/property_slice";
+import { SET_CAREGORIES } from "../../redux/slices/property_slice";
+import { MoonLoader } from "react-spinners";
 
 export default function Properties() {
   const dispatch = useDispatch();
@@ -25,13 +26,13 @@ export default function Properties() {
   );
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <MoonLoader loading={isLoading} size={10} color={"#000"} />;
   }
 
   const properties = data?.data.properties;
 
   if (isSuccess) {
-    dispatch(GET_CAREGORIES(properties));
+    dispatch(SET_CAREGORIES(properties));
   }
 
   return (

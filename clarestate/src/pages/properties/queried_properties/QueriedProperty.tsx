@@ -1,8 +1,15 @@
 import { server_url } from "../../../utils/junk";
 import axios from "axios";
-import React from "react";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { MoonLoader } from "react-spinners";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { BsCamera } from "react-icons/bs";
+import { MdDateRange } from "react-icons/md";
+import { ImLocation2 } from "react-icons/im";
+import styles from "./queriedProperties.module.scss";
+import { FaBath, FaBed, FaToilet } from "react-icons/fa";
 
 export default function QueriedProperty() {
   const queryString = useLocation().search;
@@ -10,21 +17,114 @@ export default function QueriedProperty() {
   const location = queryParams.get("location");
   const purpose = queryParams.get("purpose");
 
+  const [properties, setProperties] = useState([]);
+
   useEffect(() => {
-    get();
+    getQueriedProperties();
   }, []);
 
-  const get = async () => {
+  const getQueriedProperties = async () => {
     const response = await axios.get(
       `${server_url}/api/properties?location=${location}&purpose=${purpose}`
     );
-    console.log(response.data);
+    setProperties(response.data?.properties);
   };
 
+  console.log(properties);
+
+  if (!properties) {
+    return <MoonLoader loading={true} size={10} color={"#000"} />;
+  }
+
   return (
-    <div>
-      <h1>{location}</h1>
-      <h1>{purpose}</h1>
-    </div>
+    <section className={styles.query}>
+      <div className={styles.heading}>
+        Properties in <span>{location}</span> for <span>{purpose}</span>
+      </div>
+
+      {properties.length === 0 ? (
+        <h2 className={styles["no__results"]}>
+          No Properties Found. Try searching something else
+        </h2>
+      ) : (
+        <>
+          <h3>
+            {properties.length}{" "}
+            {properties.length === 1 ? "property" : "properties"} found
+          </h3>
+
+          {properties?.map((property: any) => {
+            const {
+              _id,
+              name,
+              price,
+              purpose,
+              slug,
+              images,
+              availability,
+              createdAt,
+              toilets,
+              bedrooms,
+              bathrooms,
+            } = property;
+            return (
+              <Link key={_id} to={`/property/${slug}`}>
+                <div className={styles["properties__details"]}>
+                  <div className={styles["properties__details__image"]}>
+                    <img src={images[0]} alt={name} />
+                    <p
+                      className={styles["property__availability"]}
+                      style={{
+                        background:
+                          availability === "Available"
+                            ? "rgba(136, 229, 29, 0.575)"
+                            : "rgba(243, 90, 52, 0.411)",
+                      }}
+                    >
+                      {" "}
+                      {availability}
+                    </p>
+                    <span className={styles["camera__icon"]}>
+                      <BsCamera />
+                      <span>{images.length}</span>
+                    </span>
+                  </div>
+                  <div className={styles["properties__details__texts"]}>
+                    <p className={styles["property__name"]}>
+                      <span>{name}</span>
+                    </p>
+
+                    <p className={styles["property__id"]}>
+                      <MdDateRange />
+                      {new Date(createdAt).toDateString()}
+                    </p>
+                    <p className={styles["property__location"]}>
+                      <ImLocation2 />
+                      {location}
+                    </p>
+                    <div className={styles["interior__info"]}>
+                      <p>
+                        <FaBed /> {bedrooms}
+                      </p>
+                      <p>
+                        <FaToilet /> {toilets}
+                      </p>
+
+                      <p>
+                        <FaBath /> {bathrooms}
+                      </p>
+                    </div>
+                    <p className={styles["property__price"]}>
+                      <span>NGN{new Intl.NumberFormat().format(price)}</span>
+                      /night
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </>
+      )}
+    </section>
   );
 }

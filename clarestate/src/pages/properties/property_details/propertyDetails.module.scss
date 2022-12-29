@@ -74,6 +74,10 @@
     :last-child {
       font-weight: 700;
     }
+    span {
+      color: $color-secondary;
+      font-weight: 700;
+    }
   }
 }
 .property__details__contents {

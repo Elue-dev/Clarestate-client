@@ -30,7 +30,7 @@ import styles from "./propertyDetails.module.scss";
 // import Footer from "../footer/Footer";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
-import { BeatLoader } from "react-spinners";
+import { BeatLoader, MoonLoader } from "react-spinners";
 import ReactWhatsapp from "react-whatsapp";
 // import Spinner from "../../components/utilities/Spinner";
 // import { SAVE_URL } from "../../redux/slice/authSlice";
@@ -87,7 +87,7 @@ export default function PropertyDetail() {
   const property = data?.data.property;
 
   if (!property) {
-    return <h1>Loading...</h1>;
+    return <MoonLoader loading={isLoading} size={10} color={"#000"} />;
   }
 
   return (
@@ -143,10 +143,7 @@ export default function PropertyDetail() {
                 </div>
               ))}
             </div>
-            <h3
-              // onClick={() => setShowSlider(true)}
-              style={{ cursor: "pointer", fontSize: ".9rem" }}
-            >
+            <h3 style={{ cursor: "pointer", fontSize: ".9rem" }}>
               <MdSwipe />
               &nbsp; <b>Swipe to see all {property.images.length} images</b>
             </h3>

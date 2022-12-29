@@ -9,7 +9,7 @@ const product_slice = createSlice({
   name: "property",
   initialState,
   reducers: {
-    GET_CAREGORIES: (state, action) => {
+    SET_CAREGORIES: (state, action) => {
       const properties = action.payload;
       console.log(properties);
       let locations_array: any = [];
@@ -26,7 +26,7 @@ const product_slice = createSlice({
   },
 });
 
-export const { GET_CAREGORIES } = product_slice.actions;
+export const { SET_CAREGORIES } = product_slice.actions;
 
 export const selectLocations = (state: RootState) => state.property.categories;
 

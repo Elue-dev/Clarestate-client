@@ -9,7 +9,8 @@
   background-size: cover;
   background-repeat: no-repeat;
 
-  height: 100vh;
+  // height: 100vh;
+  height: 60vh;
   position: relative;
   z-index: 1;
   &::after {
@@ -72,6 +73,10 @@
       font-weight: 700;
       font-size: 1.1rem;
       cursor: pointer;
+    }
+    .select__err {
+      color: crimson;
+      font-size: 1rem;
     }
     .select__wrapper {
       display: flex;
