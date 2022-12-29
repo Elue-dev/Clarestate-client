@@ -13,16 +13,19 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { server_url } from "../../../utils/junk";
 import {
   getUser,
+  getUserToken,
   SAVE_URL,
   selectIsLoggedIn,
 } from "../../../redux/slices/auth_slice";
 import { errorToast } from "../../../utils/alerts";
+import { createComment } from "../../../services/comments_service";
 
 interface idType {
   propertyID: string;
+  slug: string;
 }
 
-export default function Comments({ propertyID }: idType) {
+export default function Comments({ propertyID, slug }: idType) {
   const [comment, setComment] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [showCommentForm, setShowCommentForm] = useState(false);
@@ -30,6 +33,7 @@ export default function Comments({ propertyID }: idType) {
   const [loading, setLoading] = useState(false);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const currentUser: any = useSelector(getUser);
+  const token: any = useSelector(getUserToken);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -80,48 +84,19 @@ export default function Comments({ propertyID }: idType) {
 
   const addComment = async (e: FormEvent) => {
     e.preventDefault();
-
-    // setLoading(true);
-
-    // if (!comment) {
-    //   window.scrollTo(0, 0);
-    //   setLoading(false);
-    //   setComment("");
-    //   setShowAlert(true);
-    //   setAlertMessage(`Add a comment before submiting`);
-    //   setAlertType("error");
-    //   window.setTimeout(() => {
-    //     setShowAlert(false);
-    //     setAlertMessage(null);
-    //     setAlertType(null);
-    //   }, 6000);
-    //   return;
-    // }
-
-    // const today = new Date();
-    // const date = today.toDateString();
-    // const commentsConfig = {
-    //   userID,
-    //   name: user.displayName,
-    //   comment,
-    //   propertyID: id,
-    //   commentDate: date,
-    //   createdAt: Timestamp.now().toDate(),
-    // };
-    // await addDoc(collection(database, "comments"), commentsConfig);
-    // window.scrollTo(0, 0);
-    // setLoading(false);
-    // setShowComments(false);
-    // setShowCommentForm(false);
-    // setComment("");
-    // setShowAlert(true);
-    // setAlertMessage(`Your comment has been added successfully`);
-    // setAlertType("success");
-    // window.setTimeout(() => {
-    //   setShowAlert(false);
-    //   setAlertMessage(null);
-    //   setAlertType(null);
-    // }, 6000);
+    if (!comment) window.scrollTo(0, 0);
+    try {
+      setLoading(true);
+      await createComment(propertyID, { comment }, token);
+      setShowCommentForm(false);
+      setComment("");
+      window.scrollTo(0, 0);
+     setTimeout(() => location.assign(`/property/${slug}`), 1500)
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
   return (
@@ -140,7 +115,7 @@ export default function Comments({ propertyID }: idType) {
         {comments.length === 0 ? (
           <>
             <p className={`${styles["toggle__icon"]} ${contents}`}>
-              There are no comments for this property yet.
+              Be the first to add a comment
             </p>
             {!showComments ? (
               <button

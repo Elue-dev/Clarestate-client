@@ -77,7 +77,7 @@ export default function PropertyDetail() {
   };
 
   const { data, isLoading, error } = useQuery("properties", fetchProperties, {
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 
   if (isLoading) {
@@ -257,7 +257,7 @@ export default function PropertyDetail() {
                 </div>
               </div>
             </div>
-            <Comments propertyID={property._id} />
+            <Comments propertyID={property._id} slug={property.slug} />
             <div className={styles["save__for__later"]}>
               {alert && (
                 <p
