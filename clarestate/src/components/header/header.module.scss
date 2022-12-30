@@ -6,7 +6,7 @@
   width: 100%;
   position: fixed;
   top: 0;
-  z-index: 9;
+  z-index: 10;
   transition: 0.2s ease-in-out;
 }
 
@@ -16,7 +16,7 @@
   height: 4.7rem;
   @include flexBox(center, center, column);
   height: 3.7rem;
-  z-index: 1000000;
+  z-index: 1000;
   .header__contents {
     @include container();
     @include flexBox(space-between, center, row);

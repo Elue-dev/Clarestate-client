@@ -83,14 +83,15 @@ export default function Comments({ propertyID, slug }: idType) {
 
   const addComment = async (e: FormEvent) => {
     e.preventDefault();
-    if (!comment) window.scrollTo(0, 0);
+    if (!comment) {
+      return errorToast("Please add your comment", "addcommerror");
+    }
     try {
       setLoading(true);
       const response = await createComment(propertyID, { comment }, token);
       if (response) {
         setShowCommentForm(false);
         setComment("");
-        window.scrollTo(0, 0);
         setTimeout(() => location.assign(`/property/${slug}`), 1500);
       }
       setLoading(false);

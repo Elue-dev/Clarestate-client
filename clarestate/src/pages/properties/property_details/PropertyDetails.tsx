@@ -11,6 +11,7 @@ import { AiOutlineCalendar, AiFillTags } from "react-icons/ai";
 import { IoLocation } from "react-icons/io5";
 import { TbListDetails } from "react-icons/tb";
 import { RiAdminLine } from "react-icons/ri";
+import { GrAdd } from "react-icons/gr";
 import { AiFillCheckCircle } from "react-icons/ai";
 import {
   MdBookmarkAdd,
@@ -30,15 +31,19 @@ import styles from "./propertyDetails.module.scss";
 // import admin2 from "../../assets/logo.jpg";
 // import Footer from "../footer/Footer";
 import { motion } from "framer-motion";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BeatLoader, MoonLoader } from "react-spinners";
 import ReactWhatsapp from "react-whatsapp";
 // import { SAVE_URL } from "../../redux/slice/authSlice";
+import moment from "moment";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { server_url } from "../../../utils/junk";
 import Comments from "../../../components/properties/comments/Comments";
 import Loader from "../../../utils/Loader";
+import { TiUserAddOutline } from "react-icons/ti";
+import { selectIsLoggedIn } from "../../../redux/slices/auth_slice";
+import { errorToast } from "../../../utils/alerts";
 
 export default function PropertyDetail() {
   const { slug } = useParams();
@@ -47,10 +52,13 @@ export default function PropertyDetail() {
   const [loading, setLoading] = useState(false);
   const form = useRef();
   const [message, setMessage] = useState("");
+  const [review, setReview] = useState("");
+  const [showInput, setShowInput] = useState(false);
   //   const [copied, setCopied] = useState(false);
   const [storedBookmarks, setStoredBookmarks] = useState(null);
   const [fixPropName, setFixPropName] = useState(false);
   const [showSlider, setShowSlider] = useState(false);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -86,6 +94,18 @@ export default function PropertyDetail() {
   }
 
   const property = data?.data.property;
+
+  const addReview = () => {
+    if (!isLoggedIn) {
+      errorToast("You have to be logged in to add reviews", "addreverror");
+      navigate("/auth/login");
+      return;
+    } else if (!review) {
+      return errorToast("Please add your review", "addreverror2");
+    }
+
+    window.alert("good to go");
+  };
 
   if (!property) {
     return <Loader />;
@@ -363,7 +383,30 @@ export default function PropertyDetail() {
             </div>
             <br />
             <div className={styles["rev__wrapper"]}>
-              <h1>Reviews</h1>
+              <div className={styles["rev__head"]}>
+                <h1>Reviews</h1>
+                <span>
+                  <TiUserAddOutline
+                    onClick={() => setShowInput(!showInput)}
+                    color="rgb(18, 140, 200)"
+                    size={22}
+                  />
+                </span>
+              </div>
+              {showInput ? (
+                <div className={styles["add_rev"]}>
+                  <textarea
+                    //@ts-ignore
+                    cols="2"
+                    //@ts-ignore
+                    rows="2"
+                    value={review}
+                    onChange={(e) => setReview(e.target.value)}
+                  />
+                  <button onClick={addReview}>Add review</button>
+                </div>
+              ) : null}
+
               {property.reviews.length > 0 ? (
                 property.reviews?.map((customerReview: any, index: number) => {
                   const { rating, review, user, createdAt } = customerReview;
@@ -376,7 +419,7 @@ export default function PropertyDetail() {
                           <b>{`${user?.first_name} ${user?.last_name}`}</b>
                           <br />
                           <span className={styles.desc}>
-                            <b>{new Date(createdAt).toDateString()}</b>
+                            <b>{moment(createdAt).fromNow()}</b>
                           </span>
                         </div>
                       </div>
