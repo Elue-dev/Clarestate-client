@@ -16,6 +16,7 @@ import { AiFillCheckCircle } from "react-icons/ai";
 import {
   MdBookmarkAdd,
   MdOutlineAlternateEmail,
+  MdOutlineDeleteForever,
   MdOutlineRealEstateAgent,
   MdOutlineSubject,
 } from "react-icons/md";
@@ -34,7 +35,7 @@ import styles from "./propertyDetails.module.scss";
 // import Footer from "../footer/Footer";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { BeatLoader, MoonLoader } from "react-spinners";
+import { BeatLoader, ClipLoader } from "react-spinners";
 import ReactWhatsapp from "react-whatsapp";
 // import { SAVE_URL } from "../../redux/slice/authSlice";
 import moment from "moment";
@@ -44,12 +45,14 @@ import { server_url } from "../../../utils/junk";
 import Comments from "../../../components/properties/comments/Comments";
 import Loader from "../../../utils/Loader";
 import { TiUserAddOutline } from "react-icons/ti";
+import Notiflix from "notiflix";
 import {
+  getUser,
   getUserToken,
   selectIsLoggedIn,
 } from "../../../redux/slices/auth_slice";
 import { errorToast } from "../../../utils/alerts";
-import { createReview } from "../../../services/review_service";
+import { createReview, removeReview } from "../../../services/review_service";
 
 export default function PropertyDetail() {
   const { slug } = useParams();
@@ -57,6 +60,7 @@ export default function PropertyDetail() {
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(false);
   const [revLoading, setRevLoading] = useState(false);
+  const [delLoading, setDelLoading] = useState(false);
   const form = useRef();
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState<number | undefined>(0);
@@ -68,6 +72,7 @@ export default function PropertyDetail() {
   const [showSlider, setShowSlider] = useState(false);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const token: any = useSelector(getUserToken);
+  const currentUser: any = useSelector(getUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -94,12 +99,12 @@ export default function PropertyDetail() {
     return await axios.get(`${server_url}/api/properties/${slug}`);
   };
 
-  const { data, isLoading, error } = useQuery("properties", fetchProperties, {
+  const { data, isLoading, refetch } = useQuery("properties", fetchProperties, {
     refetchOnWindowFocus: false,
   });
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loader />;
   }
 
   const property = data?.data.property;
@@ -123,13 +128,47 @@ export default function PropertyDetail() {
     try {
       setRevLoading(true);
       await createReview(revData, property._id, token);
+      refetch();
+      setReview("");
+      setRating(0);
       setRevLoading(false);
       setShowInput(false);
-      window.location.reload();
     } catch (error) {
       setRevLoading(false);
       console.log(error);
     }
+  };
+
+  const deleteReview = async (revewID: string) => {
+    try {
+      setDelLoading(true);
+      await removeReview(revewID, token);
+      refetch();
+      setDelLoading(false);
+    } catch (error) {
+      setDelLoading(false);
+      console.log(error);
+    }
+  };
+
+  const confirmDelete = (revewID: string) => {
+    Notiflix.Confirm.show(
+      "Delete Review",
+      "Are you sure you want to delete your review?",
+      "DELETE",
+      "CLOSE",
+      function okCb() {
+        deleteReview(revewID);
+      },
+      function cancelCb() {},
+      {
+        width: "320px",
+        borderRadius: "5px",
+        titleColor: "rgb(18, 140, 200)",
+        okButtonBackground: "rgb(18, 140, 200)",
+        cssAnimationStyle: "zoom",
+      }
+    );
   };
 
   if (!property) {
@@ -332,7 +371,6 @@ export default function PropertyDetail() {
                 <div className={styles.admin}>
                   <p>{property.agentName}</p>
                   <div className={styles.contact}>
-                    {" "}
                     <a href={`tel:${property.agentContact}`}>
                       <BsTelephoneForwardFill />
                       &nbsp; {property.agentContact}
@@ -377,10 +415,8 @@ export default function PropertyDetail() {
                     name="message"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    //@ts-ignore
-                    cols=""
-                    //@ts-ignore
-                    rows="6"
+                    cols={0}
+                    rows={6}
                     required
                   ></textarea>
                 </label>
@@ -444,10 +480,11 @@ export default function PropertyDetail() {
 
               {property.reviews.length > 0 ? (
                 property.reviews?.map((customerReview: any, index: number) => {
-                  const { rating, review, user, createdAt } = customerReview;
+                  const { rating, review, user, createdAt, _id } =
+                    customerReview;
 
                   return (
-                    <div key={index} className={styles.reviews}>
+                    <div key={_id} className={styles.reviews}>
                       <div className={styles.reviewer}>
                         <img src={user?.photo} alt={user?.first_name} />
                         <div>
@@ -455,7 +492,25 @@ export default function PropertyDetail() {
                           <br />
                           <span className={styles.desc}>
                             <b>{moment(createdAt).fromNow()}</b>
-                          </span>
+                          </span>{" "}
+                          {currentUser?._id === user._id && (
+                            <span
+                              className={styles["del__rev"]}
+                              onClick={() => confirmDelete(_id)}
+                            >
+                              {delLoading ? (
+                                <ClipLoader
+                                  loading={delLoading}
+                                  //@ts-ignore
+                                  size={12}
+                                  className={styles.FadeLoader}
+                                  color="crimson"
+                                />
+                              ) : (
+                                <MdOutlineDeleteForever color="crimson" />
+                              )}
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div>

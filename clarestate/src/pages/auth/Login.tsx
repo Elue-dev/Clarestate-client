@@ -4,7 +4,7 @@ import { loginType } from "@/types/auth_types";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { BeatLoader } from "react-spinners";
+import { PulseLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { SET_ACTIVE_USER, SET_USER_TOKEN } from "../../redux/slices/auth_slice";
 import { loginUser } from "../../services/auth_services";
@@ -126,7 +126,7 @@ export default function Login() {
             </label>
             {loading && (
               <button type="button" disabled className={styles["submit__btn"]}>
-                <BeatLoader loading={loading} size={10} color={"#000"} />
+                <PulseLoader loading={loading} size={10} color={"#000"} />
               </button>
             )}
             {!loading && (

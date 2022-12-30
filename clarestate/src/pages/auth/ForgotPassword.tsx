@@ -2,7 +2,7 @@ import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineMail } from "react-icons/hi";
 import styles from "./auth.module.scss";
-import { BeatLoader } from "react-spinners";
+import { PulseLoader } from "react-spinners";
 import { forgotPassword } from "../../services/auth_services";
 
 export default function ForgotPassword() {
@@ -57,7 +57,7 @@ export default function ForgotPassword() {
             </label>
             {loading && (
               <button type="button" disabled className={styles["submit__btn"]}>
-                <BeatLoader loading={loading} size={10} color={"#000"} />
+                <PulseLoader loading={loading} size={10} color={"#000"} />
               </button>
             )}
             {!loading && (

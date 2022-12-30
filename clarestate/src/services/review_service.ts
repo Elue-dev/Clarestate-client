@@ -29,3 +29,20 @@ export const createReview = async (
     errorToast(error.response.data.message, "rerror");
   }
 };
+
+export const removeReview = async (reviewID: string, token: string) => {
+  try {
+    const response = await axios.delete(
+      `${server_url}/api/reviews/${reviewID}`,
+      {
+        headers: { authorization: `Bearer ${token}` },
+      }
+    );
+    if (response?.data.status === "success") {
+      successToast(response?.data.message, "rsuccess");
+    }
+    return response.data;
+  } catch (error: any) {
+    errorToast(error.response.data.message, "rerror");
+  }
+};

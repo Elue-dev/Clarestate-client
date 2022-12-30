@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MoonLoader } from "react-spinners";
+import { PropagateLoader } from "react-spinners";
 
 export default function Loader() {
   const [loading, setLoading] = useState(false);
@@ -11,7 +11,11 @@ export default function Loader() {
   return (
     <div className="loader">
       {loading && (
-        <MoonLoader color={"rgb(18, 140, 200)"} loading={loading} size={50} />
+        <PropagateLoader
+          color={"rgb(18, 140, 200)"}
+          loading={loading}
+          size={30}
+        />
       )}
     </div>
   );

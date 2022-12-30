@@ -2,7 +2,7 @@ import { server_url } from "../../../utils/junk";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { MoonLoader } from "react-spinners";
+import { FadeLoader, MoonLoader } from "react-spinners";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { BsCamera } from "react-icons/bs";
@@ -48,7 +48,15 @@ export default function QueriedProperty() {
       </div>
 
       {loading ? (
-        <h2 className={styles["no__results"]}>Processing...</h2>
+        <h2 className={styles["no__results"]}>
+          <FadeLoader
+            loading={loading}
+            //@ts-ignore
+            size={10}
+            speedMultiplie={3}
+            color="rgb(18, 140, 200)"
+          />
+        </h2>
       ) : (
         <>
           {properties.length === 0 ? (

@@ -7,7 +7,7 @@ import { TbPhone } from "react-icons/tb";
 import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "./auth.module.scss";
-import { BeatLoader } from "react-spinners";
+import { PulseLoader } from "react-spinners";
 import { registerUser, validateEmail } from "../../services/auth_services";
 
 const initialState: registerType = {
@@ -182,7 +182,7 @@ export default function Signup() {
             </label>
             {loading && (
               <button type="button" disabled className={styles["submit__btn"]}>
-                <BeatLoader loading={loading} size={10} color={"#000"} />
+                <PulseLoader loading={loading} size={10} color={"#000"} />
               </button>
             )}
             {!loading && (

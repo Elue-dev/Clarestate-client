@@ -2,7 +2,7 @@ import { useState, useRef, FormEvent, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { BeatLoader } from "react-spinners";
+import { PulseLoader } from "react-spinners";
 import styles from "./auth.module.scss";
 import { restorePassword } from "../../services/auth_services";
 import { useParams } from "react-router-dom";
@@ -115,7 +115,7 @@ export default function ResetPassword() {
             </label>
             {loading && (
               <button type="button" disabled className={styles["submit__btn"]}>
-                <BeatLoader loading={loading} size={10} color={"#fff"} />
+                <PulseLoader loading={loading} size={10} color={"#000"} />
               </button>
             )}
             {!loading && (

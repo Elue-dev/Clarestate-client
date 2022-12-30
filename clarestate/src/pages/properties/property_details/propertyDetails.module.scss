@@ -314,6 +314,12 @@
           cursor: pointer;
         }
       }
+      .del__rev {
+        cursor: pointer;
+        .fadeLoader {
+          display: none;
+        }
+      }
     }
     .reviews {
       gap: 0.5rem;

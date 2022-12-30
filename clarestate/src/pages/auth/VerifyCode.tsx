@@ -4,7 +4,7 @@ import {
 } from "../../services/auth_services";
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { BeatLoader } from "react-spinners";
+import { PulseLoader } from "react-spinners";
 import styles from "./auth.module.scss";
 import { useDispatch } from "react-redux";
 import { SET_ACTIVE_USER, SET_USER_TOKEN } from "../../redux/slices/auth_slice";
@@ -136,7 +136,7 @@ export default function VerifyCode() {
 
             {loading && (
               <button type="button" disabled className={styles["submit__btn"]}>
-                <BeatLoader loading={loading} size={10} color={"#000"} />
+                <PulseLoader loading={loading} size={10} color={"#000"} />
               </button>
             )}
             {!loading && (
