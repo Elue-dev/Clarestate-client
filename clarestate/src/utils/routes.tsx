@@ -40,7 +40,7 @@ export default function AllRoutes() {
         }
       />
       <Route
-        path="/auth/reset-password"
+        path="/auth/reset-password/:token"
         element={
           <Authenticated>
             <ResetPassword />

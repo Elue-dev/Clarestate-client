@@ -15,6 +15,7 @@ import { AiFillCheckCircle } from "react-icons/ai";
 import {
   MdBookmarkAdd,
   MdOutlineAlternateEmail,
+  MdOutlineRealEstateAgent,
   MdOutlineSubject,
 } from "react-icons/md";
 import { BiChevronsRight } from "react-icons/bi";
@@ -280,8 +281,8 @@ export default function PropertyDetail() {
             <div className={styles["contact__info"]}>
               <div className={styles["contact__info__details"]}>
                 <h2>
-                  <RiAdminLine style={{ color: "#888" }} />
-                  &nbsp; Contact Agent
+                  <MdOutlineRealEstateAgent style={{ color: "#888" }} />
+                  Contact Agent
                 </h2>
                 <div className={styles.admin}>
                   <p>{property.agentName}</p>
@@ -289,7 +290,7 @@ export default function PropertyDetail() {
                     {" "}
                     <a href={`tel:${property.agentContact}`}>
                       <BsTelephoneForwardFill />
-                      &nbsp; 09052014239
+                      &nbsp; {property.agentContact}
                     </a>
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-import { loginType, registerType } from "@/types/auth_types";
+import { loginType, registerType, resetType } from "@/types/auth_types";
 import { errorToast, successToast } from "../utils/alerts";
 import axios from "axios";
 
@@ -76,5 +76,38 @@ export const logoutUser = async () => {
     await axios.get(`${server_url}/api/auth/logout`);
   } catch (error: any) {
     errorToast(error.response.data.message, "loerror");
+  }
+};
+
+export const forgotPassword = async (email: string) => {
+  try {
+    const response = await axios.post(
+      `${server_url}/api/auth/forgot-password`,
+      { email }
+    );
+    if (response?.data.status === "success") {
+      successToast(response?.data.message, "svsuccess");
+    }
+    return response.data;
+  } catch (error: any) {
+    errorToast(error.response.data.message, "sverror");
+  }
+};
+
+export const restorePassword = async (
+  credentials: resetType,
+  token: string | undefined
+) => {
+  try {
+    const response = await axios.post(
+      `${server_url}/api/auth/reset-password/${token}`,
+      credentials
+    );
+    if (response?.data.status === "success") {
+      successToast(response?.data.message, "svsuccess");
+    }
+    return response.data;
+  } catch (error: any) {
+    errorToast(error.response.data.message, "sverror");
   }
 };

@@ -4,6 +4,8 @@ import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BeatLoader } from "react-spinners";
 import styles from "./auth.module.scss";
+import { restorePassword } from "../../services/auth_services";
+import { useParams } from "react-router-dom";
 
 const initialState = {
   newPassword: "",
@@ -17,6 +19,7 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const passwordRef = useRef<any | undefined>();
   const confirmPasswordRef = useRef<any | undefined>();
+  const { token } = useParams();
   const navigate = useNavigate();
 
   const { newPassword, confirmNewPassword } = credentials;
@@ -44,8 +47,20 @@ export default function ResetPassword() {
     }
   };
 
-  const resetPassword = (e: FormEvent): void => {
+  const resetPassword = async (e: FormEvent) => {
     e.preventDefault();
+
+    try {
+      setLoading(true);
+      const response = await restorePassword(credentials, token);
+      if (response) {
+        navigate("/auth/login");
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
   return (

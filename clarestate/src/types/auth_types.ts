@@ -10,3 +10,8 @@ export interface loginType {
   emailOrPhone: string;
   password: string;
 }
+
+export interface resetType {
+  newPassword: string;
+  confirmNewPassword: string;
+}

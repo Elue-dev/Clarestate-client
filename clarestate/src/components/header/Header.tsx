@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BiHomeAlt, BiLogInCircle } from "react-icons/bi";
-// import { HiOutlineHomeModern } from "react-icons/hi2";
+import { HiOutlineHomeModern } from "react-icons/hi2";
 import { MdOutlinePermContactCalendar } from "react-icons/md";
 import { RiDashboardLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
@@ -100,7 +100,7 @@ export default function Header() {
                 </NavLink>
                 <NavLink to="/all-properties">
                   <li>
-                    {/* <HiOutlineHomeModern /> */}
+                    <HiOutlineHomeModern />
                     <p>Properties</p>
                   </li>
                 </NavLink>

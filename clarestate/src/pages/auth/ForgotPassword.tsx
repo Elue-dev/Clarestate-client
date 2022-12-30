@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { HiOutlineMail } from "react-icons/hi";
 import styles from "./auth.module.scss";
 import { BeatLoader } from "react-spinners";
+import { forgotPassword } from "../../services/auth_services";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -10,11 +11,20 @@ export default function ForgotPassword() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const sendResetEmail = (e: FormEvent): void => {
+  const sendResetEmail = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!email) {
       return setError("Please enter your email address");
+    }
+
+    try {
+      setLoading(true);
+      await forgotPassword(email);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -47,7 +57,7 @@ export default function ForgotPassword() {
             </label>
             {loading && (
               <button type="button" disabled className={styles["submit__btn"]}>
-                <BeatLoader loading={loading} size={10} color={"#fff"} />
+                <BeatLoader loading={loading} size={10} color={"#000"} />
               </button>
             )}
             {!loading && (
