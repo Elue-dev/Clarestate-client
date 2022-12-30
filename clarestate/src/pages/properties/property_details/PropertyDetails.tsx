@@ -23,6 +23,8 @@ import { BiChevronsRight } from "react-icons/bi";
 import { MdMoreTime, MdSwipe } from "react-icons/md";
 import { FaUser, FaRegEdit } from "react-icons/fa";
 import StarRatings from "react-star-ratings";
+import StarsRating from "react-star-rate";
+
 import styles from "./propertyDetails.module.scss";
 // import GoBack from "../utilities/GoBack";
 // import SimilarProducts from "./SimilarProducts";
@@ -42,16 +44,22 @@ import { server_url } from "../../../utils/junk";
 import Comments from "../../../components/properties/comments/Comments";
 import Loader from "../../../utils/Loader";
 import { TiUserAddOutline } from "react-icons/ti";
-import { selectIsLoggedIn } from "../../../redux/slices/auth_slice";
+import {
+  getUserToken,
+  selectIsLoggedIn,
+} from "../../../redux/slices/auth_slice";
 import { errorToast } from "../../../utils/alerts";
+import { createReview } from "../../../services/review_service";
 
 export default function PropertyDetail() {
   const { slug } = useParams();
   const [users, setUsers] = useState([]);
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [revLoading, setRevLoading] = useState(false);
   const form = useRef();
   const [message, setMessage] = useState("");
+  const [rating, setRating] = useState<number | undefined>(0);
   const [review, setReview] = useState("");
   const [showInput, setShowInput] = useState(false);
   //   const [copied, setCopied] = useState(false);
@@ -59,6 +67,7 @@ export default function PropertyDetail() {
   const [fixPropName, setFixPropName] = useState(false);
   const [showSlider, setShowSlider] = useState(false);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const token: any = useSelector(getUserToken);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -95,16 +104,32 @@ export default function PropertyDetail() {
 
   const property = data?.data.property;
 
-  const addReview = () => {
+  const addReview = async () => {
     if (!isLoggedIn) {
       errorToast("You have to be logged in to add reviews", "addreverror");
       navigate("/auth/login");
       return;
     } else if (!review) {
       return errorToast("Please add your review", "addreverror2");
+    } else if (!rating) {
+      return errorToast("Please leave a rating", "addrateerror");
     }
 
-    window.alert("good to go");
+    const revData = {
+      review,
+      rating,
+    };
+
+    try {
+      setRevLoading(true);
+      await createReview(revData, property._id, token);
+      setRevLoading(false);
+      setShowInput(false);
+      window.location.reload();
+    } catch (error) {
+      setRevLoading(false);
+      console.log(error);
+    }
   };
 
   if (!property) {
@@ -395,6 +420,12 @@ export default function PropertyDetail() {
               </div>
               {showInput ? (
                 <div className={styles["add_rev"]}>
+                  <StarsRating
+                    value={rating}
+                    onChange={(rating) => {
+                      setRating(rating);
+                    }}
+                  />
                   <textarea
                     //@ts-ignore
                     cols="2"
@@ -403,7 +434,11 @@ export default function PropertyDetail() {
                     value={review}
                     onChange={(e) => setReview(e.target.value)}
                   />
-                  <button onClick={addReview}>Add review</button>
+                  {revLoading ? (
+                    <button disabled>Processing...</button>
+                  ) : (
+                    <button onClick={addReview}>Add review</button>
+                  )}
                 </div>
               ) : null}
 

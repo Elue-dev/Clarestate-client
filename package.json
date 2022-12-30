@@ -2,6 +2,7 @@
   "dependencies": {
     "moment": "^2.29.4",
     "react-select": "^5.7.0",
+    "react-star-rate": "^0.2.0",
     "react-star-ratings": "^2.3.0",
     "react-whatsapp": "^0.3.0"
   },

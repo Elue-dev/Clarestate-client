@@ -206,8 +206,7 @@
   }
   .right__contents {
     width: 35%;
-    // animation: slide-left 0.5s ease;
-    height: -webkit-fill-available;
+    height: fit-content;
     background: rgb(240, 240, 240);
     padding: 1.5rem 1rem;
     border-top-right-radius: 0.3rem;
@@ -301,6 +300,7 @@
           border: 0;
           border-bottom: 1px solid #333;
           border-radius: 0.2rem;
+          padding: 0.5rem;
         }
         button {
           background: $color-primary;
