@@ -10,12 +10,14 @@ import { MdDateRange } from "react-icons/md";
 import { ImLocation2 } from "react-icons/im";
 import styles from "./queriedProperties.module.scss";
 import { FaBath, FaBed, FaToilet } from "react-icons/fa";
+import Loader from "../../../utils/Loader";
 
 export default function QueriedProperty() {
   const queryString = useLocation().search;
   const queryParams = new URLSearchParams(queryString);
   const location = queryParams.get("location");
   const purpose = queryParams.get("purpose");
+  const [loading, setLoading] = useState(true);
 
   const [properties, setProperties] = useState([]);
 
@@ -28,12 +30,15 @@ export default function QueriedProperty() {
       `${server_url}/api/properties?location=${location}&purpose=${purpose}`
     );
     setProperties(response.data?.properties);
+    setLoading(false);
   };
+
+  console.log(loading);
 
   console.log(properties);
 
   if (!properties) {
-    return <MoonLoader loading={true} size={10} color={"#000"} />;
+    return <Loader />;
   }
 
   return (
@@ -42,16 +47,18 @@ export default function QueriedProperty() {
         Properties in <span>{location}</span> for <span>{purpose}</span>
       </div>
 
-      {properties.length === 0 ? (
-        <h2 className={styles["no__results"]}>
-          No Properties Found. Try searching something else
-        </h2>
+      {loading ? (
+        <h2 className={styles["no__results"]}>Processing...</h2>
       ) : (
         <>
-          <h3>
-            {properties.length}{" "}
-            {properties.length === 1 ? "property" : "properties"} found
-          </h3>
+          {properties.length === 0 ? (
+            <h2>No properties found. Try sarching something else</h2>
+          ) : (
+            <h3>
+              {properties.length}{" "}
+              {properties.length === 1 ? "property" : "properties"} found
+            </h3>
+          )}
 
           {properties?.map((property: any) => {
             const {
@@ -83,6 +90,9 @@ export default function QueriedProperty() {
                     >
                       {" "}
                       {availability}
+                    </p>
+                    <p className={styles["property__purpose"]}>
+                      <span>{purpose}</span>
                     </p>
                     <span className={styles["camera__icon"]}>
                       <BsCamera />

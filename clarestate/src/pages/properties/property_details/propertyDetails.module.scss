@@ -203,74 +203,6 @@
         }
       }
     }
-    .contact__info {
-      padding: 2.5rem 0;
-      .contact__info__details {
-        h2 {
-          @include flexBox(flex-start, center, center);
-          gap: 0.3rem;
-        }
-        .admins {
-          @include flexBox(auto, center, center);
-          gap: 5rem;
-          padding-top: 1.5rem;
-          .admin__image__wrapper {
-            position: relative;
-          }
-          img {
-            height: 80px;
-            width: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 1rem;
-            position: relative;
-          }
-          a {
-            @include flexBox(flex-start, center, row);
-            display: block;
-            margin-bottom: 0.4rem;
-            border: 1px solid #333;
-            border-radius: 0.3rem;
-            color: #333;
-            padding: 0.3rem 0.5rem;
-            font-weight: 700;
-            :first-child {
-              font-size: 2rem;
-              margin-right: 0.7rem;
-            }
-            :last-child {
-              font-weight: 700;
-              font-size: 1.1rem;
-            }
-          }
-          .admin__fallback__icon {
-            font-size: 6rem;
-          }
-          .whatsapp {
-            @include flexBox(flex-start, center, row);
-            padding: 0.45rem 1.9rem;
-            background: #222;
-            color: #fff;
-            border: 0;
-            outline: 0;
-            border-radius: 0.3rem;
-            font-weight: 700;
-            cursor: pointer;
-            :first-child {
-              font-size: 1.5rem;
-              margin-right: 0.2rem;
-            }
-          }
-          .verified__icon {
-            position: absolute;
-            color: $color-primary;
-            font-size: 1.2rem;
-          }
-        }
-      }
-      // position: fixed;
-      // bottom: 0;
-    }
   }
   .right__contents {
     width: 35%;
@@ -283,6 +215,98 @@
     h3 {
       text-align: center;
       margin-bottom: 0.7rem;
+      margin-top: 1rem;
+    }
+    .contact__info {
+      padding: 0.5rem 0;
+      text-align: center;
+      border-bottom: 1px dashed rgb(177, 176, 176);
+      .contact__info__details {
+        h2 {
+          @include flexBox(center, center, center);
+          gap: 0.3rem;
+        }
+        p {
+          font-size: 1.3rem;
+          font-weight: 500;
+          padding: 0.4rem 0;
+        }
+        .contact {
+          padding: 0.4rem 0;
+          a {
+            border: 1px solid #333;
+            background: $color-primary;
+            border-radius: 0.3rem;
+            color: #fff;
+            padding: 0.3rem 0.5rem;
+            width: fit-content;
+            font-weight: 700;
+            margin: 1rem 0;
+            :first-child {
+              font-size: 2rem;
+              margin-right: 0.7rem;
+            }
+            :last-child {
+              font-weight: 700;
+              font-size: 1.1rem;
+            }
+          }
+        }
+
+        .admin__fallback__icon {
+          font-size: 6rem;
+        }
+        .whatsapp {
+          @include flexBox(flex-start, center, row);
+          padding: 0.45rem 1.9rem;
+          background: #222;
+          color: #fff;
+          border: 0;
+          outline: 0;
+          border-radius: 0.3rem;
+          font-weight: 700;
+          cursor: pointer;
+          :first-child {
+            font-size: 1.5rem;
+            margin-right: 0.2rem;
+          }
+        }
+        .verified__icon {
+          position: absolute;
+          color: $color-primary;
+          font-size: 1.2rem;
+        }
+      }
+      // position: fixed;
+      // bottom: 0;
+    }
+    .rev__wrapper {
+      padding: 0.8rem 0;
+      border-top: 1px dashed rgb(177, 176, 176);
+      h3 {
+        text-align: left;
+      }
+    }
+    .reviews {
+      gap: 0.5rem;
+      padding: 1.2rem 0 0.6rem 0;
+
+      .reviewer {
+        display: flex;
+        gap: 0.4rem;
+        padding-bottom: 0.5rem;
+      }
+      b {
+        font-size: 0.8rem;
+      }
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+      .review {
+        font-weight: 600;
+      }
     }
     form {
       label {

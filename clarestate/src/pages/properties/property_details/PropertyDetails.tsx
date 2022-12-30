@@ -32,12 +32,12 @@ import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { BeatLoader, MoonLoader } from "react-spinners";
 import ReactWhatsapp from "react-whatsapp";
-// import Spinner from "../../components/utilities/Spinner";
 // import { SAVE_URL } from "../../redux/slice/authSlice";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { server_url } from "../../../utils/junk";
 import Comments from "../../../components/properties/comments/Comments";
+import Loader from "../../../utils/Loader";
 
 export default function PropertyDetail() {
   const { slug } = useParams();
@@ -87,7 +87,7 @@ export default function PropertyDetail() {
   const property = data?.data.property;
 
   if (!property) {
-    return <MoonLoader loading={isLoading} size={10} color={"#000"} />;
+    return <Loader />;
   }
 
   return (
@@ -236,24 +236,7 @@ export default function PropertyDetail() {
               </h2>
               <p>{property.description}</p>
             </div>
-            <div className={styles["contact__info"]}>
-              <div className={styles["contact__info__details"]}>
-                <h2>
-                  <RiAdminLine style={{ color: "#888" }} />
-                  Agent
-                </h2>
-                <div className="admins">
-                  <div className="admin__two">
-                    <h3>{property.agentName}</h3>
 
-                    <a href={`tel:${property.agentCotact}`}>
-                      <BsTelephoneForwardFill />
-                      09052014239
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
             <Comments propertyID={property._id} slug={property.slug} />
             <div className={styles["save__for__later"]}>
               {alert && (
@@ -292,43 +275,27 @@ export default function PropertyDetail() {
                 </button>
               )}
             </div>
-            {/* <ShareButtons property_id={id} heading="Share this property" /> */}
           </div>
           <div className={styles["right__contents"]}>
-            <div>
-              <h1>Reviews</h1>
-              {property.reviews.length > 0 ? (
-                property.reviews?.map((customerReview: any, index: number) => {
-                  const { rating, review, user, createdAt } = customerReview;
-
-                  return (
-                    <div key={index} className={styles.review}>
-                      <br />
-                      <StarRatings
-                        rating={rating}
-                        starDimension="30px"
-                        starRatedColor="gold"
-                        starSpacing="3px"
-                      />
-                      <p>{review}</p>
-                      <span>
-                        <b>{new Date(createdAt).toDateString()}</b>
-                      </span>
-                      <br />
-                      <span>
-                        <img src={user?.photo} alt={user?.first_name} />
-                      </span>
-                      <br />
-                      <span>
-                        <b>By: {`${user?.first_name} ${user?.last_name}`}</b>
-                      </span>
-                    </div>
-                  );
-                })
-              ) : (
-                <h2>No reviews for this property yet.</h2>
-              )}
+            <div className={styles["contact__info"]}>
+              <div className={styles["contact__info__details"]}>
+                <h2>
+                  <RiAdminLine style={{ color: "#888" }} />
+                  &nbsp; Contact Agent
+                </h2>
+                <div className={styles.admin}>
+                  <p>{property.agentName}</p>
+                  <div className={styles.contact}>
+                    {" "}
+                    <a href={`tel:${property.agentContact}`}>
+                      <BsTelephoneForwardFill />
+                      &nbsp; 09052014239
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
+
             <div>
               <h3>Need to reach out?</h3>
               <form>
@@ -393,7 +360,43 @@ export default function PropertyDetail() {
                 provided. We promise not to spam you.
               </p>
             </div>
+            <br />
+            <div className={styles["rev__wrapper"]}>
+              <h1>Reviews</h1>
+              {property.reviews.length > 0 ? (
+                property.reviews?.map((customerReview: any, index: number) => {
+                  const { rating, review, user, createdAt } = customerReview;
 
+                  return (
+                    <div key={index} className={styles.reviews}>
+                      <div className={styles.reviewer}>
+                        <img src={user?.photo} alt={user?.first_name} />
+                        <div>
+                          <b>{`${user?.first_name} ${user?.last_name}`}</b>
+                          <br />
+                          <span className={styles.desc}>
+                            <b>{new Date(createdAt).toDateString()}</b>
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <StarRatings
+                          rating={rating}
+                          starDimension="20px"
+                          starRatedColor="gold"
+                          starSpacing="0px"
+                        />
+                        <div className={styles.review}>
+                          <span>{review}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <h3>No reviews for this property yet.</h3>
+              )}
+            </div>
             {/* <SimilarProducts /> */}
           </div>
         </div>

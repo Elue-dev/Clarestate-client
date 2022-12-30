@@ -9,6 +9,7 @@ import styles from "./properties.module.scss";
 import { useDispatch } from "react-redux";
 import { SET_CAREGORIES } from "../../redux/slices/property_slice";
 import { MoonLoader } from "react-spinners";
+import Loader from "../../utils/Loader";
 
 export default function Properties() {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ export default function Properties() {
   );
 
   if (isLoading) {
-    return <MoonLoader loading={isLoading} size={10} color={"#000"} />;
+    return <Loader />;
   }
 
   const properties = data?.data.properties;
@@ -54,6 +55,7 @@ export default function Properties() {
               location,
               images,
               slug,
+              purpose,
             } = property;
             return (
               <div key={_id}>
@@ -76,6 +78,7 @@ export default function Properties() {
                         {" "}
                         {availability}
                       </p>
+
                       <span className={styles["camera__icon"]}>
                         <BsCamera />
                         <span>{images.length}</span>
