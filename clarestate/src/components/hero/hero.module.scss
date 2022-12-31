@@ -34,12 +34,22 @@
     line-height: 1.8;
     font-weight: 700;
     max-width: 640px;
+    @include mQ(600px) {
+      width: max-content;
+      max-width: 350px;
+    }
     h1 {
       font-size: 2.4rem;
       text-transform: uppercase;
+      @include mQ(600px) {
+        font-size: 1.55rem;
+      }
     }
     p {
       font-size: 1.5rem;
+      @include mQ(600px) {
+        font-size: 1.1rem;
+      }
     }
     .hero__btn {
       //   @include button();
@@ -80,10 +90,16 @@
     }
     .select__wrapper {
       display: flex;
+      @include mQ(600px) {
+        flex-direction: column;
+      }
       .select__purpose {
         color: #000;
         cursor: pointer;
         width: 60%;
+        @include mQ(600px) {
+          width: 100%;
+        }
       }
     }
   }
