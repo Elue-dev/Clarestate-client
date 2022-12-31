@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { BiHomeAlt, BiLogInCircle } from "react-icons/bi";
 import { HiOutlineHomeModern } from "react-icons/hi2";
-import { MdOutlinePermContactCalendar } from "react-icons/md";
+import {
+  MdOutlineAdminPanelSettings,
+  MdOutlinePermContactCalendar,
+} from "react-icons/md";
 import { RiDashboardLine } from "react-icons/ri";
 import { SiHomebridge } from "react-icons/si";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +21,7 @@ import {
   SET_USER_TOKEN,
 } from "../../redux/slices/auth_slice";
 import styles from "./header.module.scss";
+import { AdminOnlyLink } from "../admin_only/AdminOnlyRoute";
 
 export default function Header() {
   const [scrollPage, setScrollpage] = useState(false);
@@ -93,6 +97,14 @@ export default function Header() {
               </div>
 
               <ul>
+                <AdminOnlyLink>
+                  <NavLink to="/admin/view-properties">
+                    <li>
+                      <MdOutlineAdminPanelSettings />
+                      <p>Admin</p>
+                    </li>
+                  </NavLink>
+                </AdminOnlyLink>
                 <NavLink to="/">
                   <li>
                     <BiHomeAlt />

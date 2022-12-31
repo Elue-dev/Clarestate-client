@@ -7,6 +7,7 @@ import { REMOVE_ACTIVE_USER } from "./redux/slices/auth_slice";
 import { d } from "./utils/junk";
 import AllRoutes from "./utils/routes";
 import Header from "./components/header/Header";
+import ScrollToTop from "./utils/scroll_to_top";
 
 function App() {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ function App() {
       <BrowserRouter>
         <Header />
         <AllRoutes />
+        <ScrollToTop />
         <ToastContainer
           toastStyle={{
             backgroundColor: "rgba(44, 134, 179, 0.364)",

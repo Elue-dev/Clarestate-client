@@ -33,7 +33,7 @@ interface idType {
   slug: string;
 }
 
-export default function Comments({ propertyID, slug }: idType) {
+export default function Comments({ propertyID }: idType) {
   const [comment, setComment] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [showCommentForm, setShowCommentForm] = useState(false);

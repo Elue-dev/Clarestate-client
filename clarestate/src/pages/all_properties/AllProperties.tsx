@@ -8,7 +8,7 @@ import {
   SORT_PROPERTIES,
 } from "../../redux/slices/filter_slice";
 import { Link } from "react-router-dom";
-import { CgEyeAlt } from "react-icons/cg";
+import { CiRead } from "react-icons/ci";
 import { TbHomeOff } from "react-icons/tb";
 import { IoClose } from "react-icons/io5";
 import { ImMenu2 } from "react-icons/im";
@@ -288,7 +288,7 @@ export default function AllProperties() {
                     </div>
                     <Link to={`/property/${slug}`}>
                       <button className={styles["more_"]}>
-                        <CgEyeAlt />
+                        <CiRead />
                         MORE DETAILS
                       </button>
                     </Link>
