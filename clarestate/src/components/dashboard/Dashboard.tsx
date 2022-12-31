@@ -1,13 +1,14 @@
 import {
   getUser,
   getUserToken,
+  REMOVE_ACTIVE_USER,
   SET_ACTIVE_USER,
 } from "../../redux/slices/auth_slice";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./dashboard.module.scss";
 import { userType } from "../../types/user_type";
-import { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import { MdAddAPhoto } from "react-icons/md";
+import { useState, ChangeEvent, FormEvent, useEffect, useRef } from "react";
+import { MdAddAPhoto, MdOutlinePassword } from "react-icons/md";
 import { TiUserOutline } from "react-icons/ti";
 import { TbPhone } from "react-icons/tb";
 import { HiOutlineMail } from "react-icons/hi";
@@ -16,7 +17,16 @@ import { server_url, updateUser } from "../../services/users_services";
 import { PulseLoader } from "react-spinners";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AiOutlineEye } from "react-icons/ai";
+import Loader from "../../utils/Loader";
+import { updatePassword } from "../../services/auth_services";
+
+const passwordStates = {
+  oldPassword: "",
+  newPassword: "",
+  confirmNewPassword: "",
+};
 
 export default function Dashboard() {
   const user: any = useSelector(getUser);
@@ -30,20 +40,28 @@ export default function Dashboard() {
     uPhone: phone,
     uBio: bio,
   });
+  const [passwords, setPasswords] = useState(passwordStates);
   const [imagePreview, setImagePreview] = useState(null);
   const [userPhoto, setUserPhoto] = useState<any>(null);
+  const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loading_sec, setLoading_Sec] = useState(false);
   const dispatch = useDispatch();
-
-  //   console.log(user);
+  const navigate = useNavigate();
 
   const { fName, lName, uPhone, uEmail, uBio } = credentials;
+  const { oldPassword, newPassword, confirmNewPassword } = passwords;
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
     const { name, value } = e.target;
     setCredentials({ ...credentials, [name]: value });
+  };
+
+  const handlePasswordsChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setPasswords({ ...passwords, [name]: value });
   };
 
   const handleImageChange = (e: any) => {
@@ -95,6 +113,22 @@ export default function Dashboard() {
     }
   };
 
+  const changePassword = async (e: FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setLoading_Sec(true);
+      const response = await updatePassword(token, passwords);
+      if (response) {
+        dispatch(REMOVE_ACTIVE_USER());
+        navigate("/auth/login");
+      }
+      setLoading_Sec(false);
+    } catch (error) {
+      setLoading_Sec(false);
+    }
+  };
+
   useEffect(() => {
     refetch();
   }, []);
@@ -113,12 +147,15 @@ export default function Dashboard() {
     }
   );
 
-  if (isLoading) {
-    return <h1>loading data...</h1>;
-  }
-
   const properties = data?.data.properties;
-  console.log(properties);
+
+  if (isLoading || !properties) {
+    return (
+      <h1>
+        <Loader />
+      </h1>
+    );
+  }
 
   return (
     <section className={styles.dashboard}>
@@ -247,31 +284,84 @@ export default function Dashboard() {
               {properties.map((property: any) => {
                 const { name, price, slug, purpose } = property;
                 return (
-                  <Link to={`/property/${slug}`}>
-                    <div className={styles.card}>
-                      <div>
-                        <b>Property Name:</b>
-                        &nbsp;{name}
-                      </div>
-                      <div>
-                        <b>Property Price:</b>
-                        &nbsp;NGN {new Intl.NumberFormat().format(price)}
-                      </div>
-                      <div
-                        className={
-                          purpose === "Sale"
-                            ? `${styles.sale}`
-                            : purpose === "Rent"
-                            ? `${styles.rent}`
-                            : `${styles.shortlet}`
-                        }
-                      >
-                        {purpose}
-                      </div>
+                  <div className={styles.card}>
+                    <div>
+                      <b>Property Name:</b>
+                      &nbsp;{name}
                     </div>
-                  </Link>
+                    <div>
+                      <b>Property Price:</b>
+                      &nbsp;NGN {new Intl.NumberFormat().format(price)}
+                    </div>
+                    <div
+                      className={
+                        purpose === "Sale"
+                          ? `${styles.sale} ${styles.purpose}`
+                          : purpose === "Rent"
+                          ? `${styles.rent}  ${styles.purpose}`
+                          : `${styles.shortlet}  ${styles.purpose}`
+                      }
+                    >
+                      <span> For {purpose}</span>
+                    </div>
+                    <Link to={`/property/${slug}`}>
+                      <span className={styles.details}>
+                        <AiOutlineEye />
+                      </span>
+                    </Link>
+                  </div>
                 );
               })}
+              <form onSubmit={changePassword}>
+                <h2>Password Update</h2>
+                <div className={styles.fields}>
+                  <label>
+                    <span>Old Password</span>
+                    <div className={styles["auth__wrap"]}>
+                      <MdOutlinePassword />
+                      <input
+                        type="password"
+                        name="oldPassword"
+                        value={oldPassword}
+                        onChange={handlePasswordsChange}
+                      />
+                    </div>
+                  </label>
+                  <label>
+                    <span> New Password</span>
+                    <div className={styles["auth__wrap"]}>
+                      <MdOutlinePassword />
+                      <input
+                        type="password"
+                        name="newPassword"
+                        value={newPassword}
+                        onChange={handlePasswordsChange}
+                      />
+                    </div>
+                  </label>
+                  <label>
+                    <span>Confirm New Password</span>
+                    <div className={styles["auth__wrap"]}>
+                      <MdOutlinePassword />
+                      <input
+                        type="password"
+                        name="confirmNewPassword"
+                        value={confirmNewPassword}
+                        onChange={handlePasswordsChange}
+                      />
+                    </div>
+                  </label>
+                </div>
+                {loading_sec ? (
+                  <button type="button" className={styles["submit__btn2"]}>
+                    Updating...
+                  </button>
+                ) : (
+                  <button type="submit" className={styles["submit__btn2"]}>
+                    Update Password
+                  </button>
+                )}
+              </form>
             </div>
           )}
         </div>

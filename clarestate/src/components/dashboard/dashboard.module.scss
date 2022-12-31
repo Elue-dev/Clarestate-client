@@ -10,7 +10,7 @@
     .left__dashboard {
       width: 50%;
       border-right: 1px solid rgb(226, 225, 225);
-      padding-right: 0.5rem;
+      padding-right: 0.8rem;
       .user__det {
         position: relative;
         margin-bottom: 1rem;
@@ -54,24 +54,6 @@
             margin-bottom: 0;
             background: transparent;
           }
-          .password__field {
-            @include flexBox(center, center, row);
-            border: 1px solid darkgray;
-            border-radius: 0.3rem;
-            padding: 0 0.8rem;
-            :first-child {
-              font-size: 1.4rem;
-              display: block;
-              color: darkgray;
-            }
-            input {
-              border: 0;
-              font-family: $font-family;
-            }
-            span {
-              cursor: pointer;
-            }
-          }
           .auth__wrap {
             display: flex;
             border: 1px solid darkgray;
@@ -96,22 +78,6 @@
           outline: 0;
           cursor: pointer;
         }
-        .auth__redirect {
-          padding-top: 0.6rem;
-          text-align: center;
-          font-weight: 600;
-          a {
-            color: $color-primary;
-            font-weight: 700;
-          }
-        }
-        .resend__label {
-          margin-bottom: 0;
-        }
-        .resend__btn {
-          background: #333;
-          color: #fff;
-        }
       }
       .form__label {
         display: block;
@@ -127,24 +93,6 @@
         bottom: -1.7rem;
         left: 3.5rem;
       }
-      .form__photo-upload {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        font-size: 1.6rem;
-      }
-
-      .form__user-photo {
-        height: 7.5rem;
-        width: 7.5rem;
-        border-radius: 50%;
-        margin-right: 2rem;
-        object-fit: cover;
-      }
-
       .form__upload {
         width: 0.1px;
         height: 0.1px;
@@ -153,12 +101,10 @@
         position: absolute;
         z-index: -1;
       }
-
       .form__upload:focus + label {
         outline: 3px solid #55c57a;
         outline-offset: 3px;
       }
-
       .form__upload + label {
         color: #55c57a;
         display: inline-block;
@@ -180,28 +126,95 @@
     }
     .right__dashboard {
       width: 50%;
-      padding-left: 0.5rem;
+      padding-left: 0.8rem;
       .users__prop {
         .card {
           margin-top: 1rem;
           box-shadow: $box-shadow-100;
-          padding: 2rem;
+          padding: 1rem;
           line-height: 2;
+          position: relative;
+        }
+        .purpose {
+          padding: 0.1rem 1rem;
+          display: inline-block;
+          border-radius: 0.3rem;
+          font-weight: 700;
+          margin-top: 0.3rem;
+          color: #fff;
         }
         .sale {
           background: #55c57a;
-          display: inline-block;
-          height: 30px;
-          width: 30px;
-          border-radius: 50%;
         }
         .rent {
-          background: goldenrod;
-          display: inline-block;
+          background: #c55571;
         }
         .shortlet {
           background: chocolate;
-          display: inline-block;
+        }
+        .details {
+          position: absolute;
+          top: 0;
+          right: 1rem;
+          font-size: 1.4rem;
+        }
+      }
+      form {
+        margin-top: 1.5rem;
+        max-width: 100%;
+        .fields {
+          @include grid(repeat(3, 1fr), 0.3rem);
+          row-gap: 1rem;
+          padding-top: 1rem;
+        }
+        label {
+          display: block;
+          //   width: 400px;
+          &:focus {
+            .auth__wrap {
+              display: none;
+              border: 2px solid $color-primary;
+            }
+          }
+          span {
+            display: block;
+            font-weight: 700;
+          }
+          input,
+          textarea {
+            font-size: 14px;
+            padding: 0.8rem 1rem;
+            border-radius: 0.3rem;
+            border: 0;
+            outline: 0;
+            margin-bottom: 0;
+            background: transparent;
+            width: 90px;
+          }
+          .auth__wrap {
+            display: flex;
+            border: 1px solid darkgray;
+            @include flexBox(flex-start, center, row);
+            border-radius: 0.3rem;
+            padding: 0 0.8rem;
+            :first-child {
+              font-size: 1.4rem;
+              color: darkgray;
+            }
+          }
+        }
+        .submit__btn2 {
+          width: auto;
+          margin-top: 0.8rem;
+          background: $color-primary;
+          color: #fff;
+          font-weight: 700;
+          border-radius: 0.3rem;
+          font-size: 1.1rem;
+          padding: 0.7rem;
+          border: 0;
+          outline: 0;
+          cursor: pointer;
         }
       }
     }

@@ -27,11 +27,7 @@ export const updateUser = async (
   }
 };
 
-export const getUserProperties = async (
-  userID: string,
-  token: string,
-  credentials: any
-) => {
+export const getUserProperties = async (token: string, credentials: any) => {
   try {
     const response = await axios.patch(
       `${server_url}/api/users/my-properties`,

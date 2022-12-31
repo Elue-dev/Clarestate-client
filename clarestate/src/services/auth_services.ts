@@ -111,3 +111,22 @@ export const restorePassword = async (
     errorToast(error.response.data.message, "sverror");
   }
 };
+
+export const updatePassword = async (token: string, credentials: any) => {
+  try {
+    const response = await axios.put(
+      `${server_url}/api/auth/update-password`,
+      credentials,
+      {
+        headers: { authorization: `Bearer ${token}` },
+      }
+    );
+    if (response?.data.status === "success") {
+      successToast(response?.data.message, "rsuccess");
+    }
+
+    return response.data;
+  } catch (error: any) {
+    errorToast(error.response.data.message, "rerror");
+  }
+};
