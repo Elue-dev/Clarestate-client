@@ -13,6 +13,7 @@ import styles from "./contact.module.scss";
 import { useSelector } from "react-redux";
 import { getUserToken } from "../../redux/slices/auth_slice";
 import { sendContactEmail } from "../../services/users_services";
+import { errorToast } from "../../utils/alerts";
 
 export default function Contact() {
   const [message, setMessage] = useState("");
@@ -22,6 +23,10 @@ export default function Contact() {
 
   const sendEmail = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (!subject || !message) {
+      return errorToast("Both subject and message are required", "cterror");
+    }
 
     const contactData = { message, subject };
     try {
@@ -103,7 +108,6 @@ export default function Contact() {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Subject"
-                  required
                 />
               </label>
               <label>

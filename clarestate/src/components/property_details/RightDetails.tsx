@@ -82,7 +82,7 @@ export default function RightDetails({ property, refetch }: any) {
   const confirmDelete = (revewID: string) => {
     Notiflix.Confirm.show(
       "Delete Review",
-      "Are you sure you want to delete your review?",
+      "Are you sure you want to delete your review on this property?",
       "DELETE",
       "CLOSE",
       function okCb() {
@@ -242,7 +242,6 @@ export default function RightDetails({ property, refetch }: any) {
                               loading={delLoading}
                               //@ts-ignore
                               size={12}
-                              className={styles.FadeLoader}
                               color="crimson"
                             />
                           ) : (

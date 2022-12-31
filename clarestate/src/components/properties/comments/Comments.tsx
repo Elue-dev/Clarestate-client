@@ -2,7 +2,7 @@ import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCommentMedical, FaUserEdit } from "react-icons/fa";
-import { MdOutlineDateRange } from "react-icons/md";
+import { MdOutlineDateRange, MdOutlineDeleteForever } from "react-icons/md";
 import { FaRegComment } from "react-icons/fa";
 import { BiDotsHorizontal } from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
@@ -18,7 +18,12 @@ import {
   selectIsLoggedIn,
 } from "../../../redux/slices/auth_slice";
 import { errorToast } from "../../../utils/alerts";
-import { createComment } from "../../../services/comments_service";
+import {
+  createComment,
+  removeComment,
+} from "../../../services/comments_service";
+import { ClipLoader } from "react-spinners";
+import Notiflix from "notiflix";
 
 interface idType {
   propertyID: string;
@@ -29,6 +34,7 @@ export default function Comments({ propertyID, slug }: idType) {
   const [comment, setComment] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [showCommentForm, setShowCommentForm] = useState(false);
+  const [delLoading, setDelLoading] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -43,7 +49,7 @@ export default function Comments({ propertyID, slug }: idType) {
     );
   };
 
-  const { data, isLoading, error } = useQuery("comments", fetchComments, {
+  const { data, isLoading, refetch } = useQuery("comments", fetchComments, {
     refetchOnWindowFocus: false,
   });
 
@@ -101,6 +107,38 @@ export default function Comments({ propertyID, slug }: idType) {
     }
   };
 
+  const deleteComment = async (commentID: string) => {
+    try {
+      setDelLoading(true);
+      await removeComment(commentID, token);
+      refetch();
+      setDelLoading(false);
+    } catch (error) {
+      setDelLoading(false);
+      console.log(error);
+    }
+  };
+
+  const confirmDelete = (commentID: string) => {
+    Notiflix.Confirm.show(
+      "Delete Comment",
+      "Are you sure you want to delete your commennt on this property?",
+      "DELETE",
+      "CLOSE",
+      function okCb() {
+        deleteComment(commentID);
+      },
+      function cancelCb() {},
+      {
+        width: "320px",
+        borderRadius: "5px",
+        titleColor: "crimson",
+        okButtonBackground: "crimson",
+        cssAnimationStyle: "zoom",
+      }
+    );
+  };
+
   return (
     <div className={styles["comments__section"]}>
       <div className={wrapper}>
@@ -130,7 +168,7 @@ export default function Comments({ propertyID, slug }: idType) {
           </>
         ) : (
           comments.map((com: any, index: number) => {
-            const { comment, user, createdAt } = com;
+            const { comment, user, createdAt, _id } = com;
             return (
               //@ts-ignore
               <ul key={index} className={contents}>
@@ -154,6 +192,26 @@ export default function Comments({ propertyID, slug }: idType) {
                     )}
                   </div>
                 </li>
+                <div className={styles["del__comm"]}>
+                  {currentUser?._id === user._id && (
+                    <span
+                      className={styles["del__rev"]}
+                      onClick={() => confirmDelete(_id)}
+                    >
+                      {delLoading ? (
+                        <ClipLoader
+                          loading={delLoading}
+                          //@ts-ignore
+                          size={20}
+                          className={styles.FadeLoader}
+                          color="crimson"
+                        />
+                      ) : (
+                        <MdOutlineDeleteForever color="crimson" size="20px" />
+                      )}
+                    </span>
+                  )}
+                </div>
               </ul>
             );
           })

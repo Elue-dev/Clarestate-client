@@ -80,6 +80,9 @@
   .rev__wrapper {
     padding: 0.8rem 0;
     border-top: 1px dashed rgb(177, 176, 176);
+    box-shadow: $box-shadow-100;
+    background: #fff;
+    padding: 1rem;
     .rev__head {
       @include flexBox(space-between, center);
       h3 {
@@ -114,9 +117,6 @@
     }
     .del__rev {
       cursor: pointer;
-      .fadeLoader {
-        display: none;
-      }
     }
   }
   .reviews {
@@ -151,7 +151,7 @@
       border-radius: 0.2rem;
       background: #fff;
       margin-bottom: 0.4rem;
-      padding: 0.4rem;
+      padding: 0.7rem;
       :first-child {
         margin-left: 0.4rem;
       }

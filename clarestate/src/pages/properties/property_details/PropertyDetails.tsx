@@ -9,11 +9,10 @@ import { MdBookmarkAdd } from "react-icons/md";
 import { BiChevronsRight } from "react-icons/bi";
 import { MdSwipe } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
-
+import { motion } from "framer-motion";
 import styles from "./propertyDetails.module.scss";
 // import GoBack from "../utilities/GoBack";
 // import Footer from "../footer/Footer";
-import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { BeatLoader, ClipLoader } from "react-spinners";
 import ReactWhatsapp from "react-whatsapp";
@@ -75,7 +74,11 @@ export default function PropertyDetail() {
   }
 
   return (
-    <>
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.1 }}
+    >
       <div className={styles["popup"]}></div>
       <section className={styles["property__details"]}>
         {/* <GoBack /> */}
@@ -202,6 +205,6 @@ export default function PropertyDetail() {
         </div>
         {/* <Footer /> */}
       </section>
-    </>
+    </motion.section>
   );
 }
