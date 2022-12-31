@@ -13,8 +13,6 @@
 //   const [search, setSearch] = useState("");
 //   const properties = useSelector(selectProperties);
 //   const filteredProperties = useSelector(selectFilteredProperties);
-//   const { setShowAlert, setAlertMessage, setAlertType, formatCurrency } =
-//     useCustomAlert();
 //   const dispatch = useDispatch();
 
 //   console.log(properties);
@@ -212,3 +210,9 @@
 //     </motion.div>
 //   );
 // }
+
+import React from "react";
+
+export default function ViewProperties() {
+  return <div>ViewProperties</div>;
+}
