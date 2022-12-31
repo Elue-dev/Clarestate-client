@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -23,6 +23,7 @@ import styles from "./allProperties.module.scss";
 // import { animateScroll as scroll } from "react-scroll";
 
 const sortOptions = [
+  { value: "latest", label: "Sorting: Latest" },
   { value: "lowest-price", label: "Sort by Lowest Price" },
   { value: "highest-price", label: "Sort by Highest Price" },
   { value: "Available", label: "Sort: Available" },
@@ -145,7 +146,7 @@ export default function AllProperties() {
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by Location or Name..."
+              placeholder="SEARCH BY LOCATION OR PROPERTY NAME..."
             />
           </label>
         </div>
@@ -188,8 +189,8 @@ export default function AllProperties() {
         <div
           className={
             scrollPage
-              ? `${styles["menu__filter "]} ${"fix_menu"}`
-              : styles["menu__filter"]
+              ? `${styles["menu__filter"]} ${styles["fix_menu"]}`
+              : `${styles["menu__filter"]}`
           }
         >
           <ImMenu2 onClick={() => setShowFilter(true)} />
@@ -241,7 +242,7 @@ export default function AllProperties() {
             {filteredProperties.length === 0 && (
               <div className={styles["no__property"]}>
                 <TbHomeOff className={styles["empty__icon"]} />
-                <h2>No properties found</h2>
+                <h2>No properties found for '{search}'</h2>
               </div>
             )}
             {currentItems?.map((property: any) => {
