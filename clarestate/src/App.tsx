@@ -8,6 +8,9 @@ import { d } from "./utils/junk";
 import AllRoutes from "./utils/routes";
 import Header from "./components/header/Header";
 import ScrollToTop from "./utils/scroll_to_top";
+import { QueryClientProvider, QueryClient } from "react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   const dispatch = useDispatch();
@@ -20,17 +23,19 @@ function App() {
 
   return (
     <div>
-      <BrowserRouter>
-        <Header />
-        <AllRoutes />
-        <ScrollToTop />
-        <ToastContainer
-          toastStyle={{
-            backgroundColor: "rgba(44, 134, 179, 0.364)",
-            color: "#fff",
-          }}
-        />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Header />
+          <AllRoutes />
+          <ScrollToTop />
+          <ToastContainer
+            toastStyle={{
+              backgroundColor: "rgba(44, 134, 179, 0.364)",
+              color: "#fff",
+            }}
+          />
+        </BrowserRouter>
+      </QueryClientProvider>
     </div>
   );
 }
