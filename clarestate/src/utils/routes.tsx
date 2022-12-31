@@ -11,6 +11,7 @@ import PropertyDetail from "../pages/properties/property_details/PropertyDetails
 import QueriedProperty from "../pages/properties/queried_properties/QueriedProperty";
 import Dashboard from "../components/dashboard/Dashboard";
 import Contact from "../pages/contact/Contact";
+import AllProperties from "../pages/all_properties/AllProperties";
 
 export default function AllRoutes() {
   return (
@@ -18,6 +19,7 @@ export default function AllRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/property/:slug" element={<PropertyDetail />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/all-properties" element={<AllProperties />} />
       <Route
         path="/user/dashboard"
         element={

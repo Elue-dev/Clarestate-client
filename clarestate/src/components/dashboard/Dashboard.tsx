@@ -6,15 +6,14 @@ import {
 } from "../../redux/slices/auth_slice";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./dashboard.module.scss";
-import { userType } from "../../types/user_type";
-import { useState, ChangeEvent, FormEvent, useEffect, useRef } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { MdAddAPhoto, MdOutlinePassword } from "react-icons/md";
 import { TiUserOutline } from "react-icons/ti";
 import { TbPhone } from "react-icons/tb";
 import { HiOutlineMail } from "react-icons/hi";
 import { RiFolderUserLine } from "react-icons/ri";
 import { server_url, updateUser } from "../../services/users_services";
-import { FadeLoader, PulseLoader } from "react-spinners";
+import { FadeLoader } from "react-spinners";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,6 +21,7 @@ import { AiOutlineEye } from "react-icons/ai";
 import Loader from "../../utils/Loader";
 import { motion } from "framer-motion";
 import { updatePassword } from "../../services/auth_services";
+import { errorToast } from "../../utils/alerts";
 
 const passwordStates = {
   oldPassword: "",
@@ -44,7 +44,6 @@ export default function Dashboard() {
   const [passwords, setPasswords] = useState(passwordStates);
   const [imagePreview, setImagePreview] = useState(null);
   const [userPhoto, setUserPhoto] = useState<any>(null);
-  const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loading_sec, setLoading_Sec] = useState(false);
   const dispatch = useDispatch();
@@ -117,6 +116,13 @@ export default function Dashboard() {
   const changePassword = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (!oldPassword || !newPassword || !confirmNewPassword) {
+      return errorToast(
+        "Please provide all three password credentials",
+        "uperror"
+      );
+    }
+
     try {
       setLoading_Sec(true);
       const response = await updatePassword(token, passwords);
@@ -129,10 +135,6 @@ export default function Dashboard() {
       setLoading_Sec(false);
     }
   };
-
-  //   useEffect(() => {
-  //     refetch();
-  //   }, []);
 
   const fetchUserProperties = async () => {
     return await axios.get(`${server_url}/api/users/my-properties`, {
@@ -149,7 +151,6 @@ export default function Dashboard() {
   );
 
   const properties = data?.data.properties;
-  console.log(properties);
 
   if (isLoading || !properties) {
     return (

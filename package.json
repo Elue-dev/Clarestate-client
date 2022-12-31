@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "moment": "^2.29.4",
+    "react-paginate": "^8.1.4",
     "react-select": "^5.7.0",
     "react-star-rate": "^0.2.0",
     "react-star-ratings": "^2.3.0",
