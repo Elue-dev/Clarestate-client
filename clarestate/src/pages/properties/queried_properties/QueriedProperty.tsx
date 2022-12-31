@@ -60,7 +60,7 @@ export default function QueriedProperty() {
       ) : (
         <>
           {properties.length === 0 ? (
-            <h2>No properties found. Try sarching something else</h2>
+            <h2>No properties found. Try searching something else</h2>
           ) : (
             <h3>
               {properties.length}{" "}

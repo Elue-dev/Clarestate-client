@@ -9,12 +9,21 @@ import VerifyCode from "../pages/auth/VerifyCode";
 import Unauthenticated from "../components/protect_routes/unauthenticated";
 import PropertyDetail from "../pages/properties/property_details/PropertyDetails";
 import QueriedProperty from "../pages/properties/queried_properties/QueriedProperty";
+import Dashboard from "../components/dashboard/Dashboard";
 
 export default function AllRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/property/:slug" element={<PropertyDetail />} />
+      <Route
+        path="/user/dashboard"
+        element={
+          <Unauthenticated>
+            <Dashboard />
+          </Unauthenticated>
+        }
+      />
       <Route
         path="/auth/login"
         element={
