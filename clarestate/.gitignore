@@ -12,7 +12,7 @@ node_modules
 dist
 dist-ssr
 *.local
-src/utils/junk.ts
+# src/utils/junk.ts
 
 # Editor directories and files
 .vscode/*
