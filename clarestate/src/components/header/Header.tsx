@@ -3,6 +3,7 @@ import { BiHomeAlt, BiLogInCircle } from "react-icons/bi";
 import { HiOutlineHomeModern } from "react-icons/hi2";
 import { MdOutlinePermContactCalendar } from "react-icons/md";
 import { RiDashboardLine } from "react-icons/ri";
+import { SiHomebridge } from "react-icons/si";
 import { useDispatch, useSelector } from "react-redux";
 import { CgMenuGridO } from "react-icons/cg";
 import { BsDot } from "react-icons/bs";
@@ -100,7 +101,7 @@ export default function Header() {
                 </NavLink>
                 <NavLink to="/all-properties">
                   <li>
-                    <HiOutlineHomeModern />
+                    <SiHomebridge />
                     <p>Properties</p>
                   </li>
                 </NavLink>
@@ -155,9 +156,9 @@ export default function Header() {
                       </div>
                     ) : (
                       <div className={styles["auth_n_logged__in"]}>
-                        <p>
+                        <p onClick={() => navigate("user/dashboard")}>
                           <RiDashboardLine />
-                          <NavLink to="/user/dashboard">Dashboard</NavLink>
+                          Dashboard
                         </p>
                         <p>
                           <BiLogInCircle />
@@ -182,7 +183,7 @@ export default function Header() {
           </NavLink>
           <NavLink to="/all-properties">
             <li>
-              {/* <HiOutlineHomeModern /> */}
+              <SiHomebridge />
               <p>Properties</p>
             </li>
           </NavLink>

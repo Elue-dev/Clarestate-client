@@ -45,3 +45,22 @@ export const getUserProperties = async (token: string, credentials: any) => {
     errorToast(error.response.data.message, "rerror");
   }
 };
+
+export const sendContactEmail = async (token: string, contactData: any) => {
+  try {
+    const response = await axios.post(
+      `${server_url}/api/contact`,
+      contactData,
+      {
+        headers: { authorization: `Bearer ${token}` },
+      }
+    );
+    if (response?.data.status === "success") {
+      successToast(response?.data.message, "rsuccess");
+    }
+
+    return response.data;
+  } catch (error: any) {
+    errorToast(error.response.data.message, "rerror");
+  }
+};

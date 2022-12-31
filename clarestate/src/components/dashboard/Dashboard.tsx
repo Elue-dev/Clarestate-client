@@ -325,58 +325,58 @@ export default function Dashboard() {
                       </div>
                     );
                   })}
-                  <form onSubmit={changePassword}>
-                    <h2>Password Update</h2>
-                    <div className={styles.fields}>
-                      <label>
-                        <span>Old Password</span>
-                        <div className={styles["auth__wrap"]}>
-                          <MdOutlinePassword />
-                          <input
-                            type="password"
-                            name="oldPassword"
-                            value={oldPassword}
-                            onChange={handlePasswordsChange}
-                          />
-                        </div>
-                      </label>
-                      <label>
-                        <span> New Password</span>
-                        <div className={styles["auth__wrap"]}>
-                          <MdOutlinePassword />
-                          <input
-                            type="password"
-                            name="newPassword"
-                            value={newPassword}
-                            onChange={handlePasswordsChange}
-                          />
-                        </div>
-                      </label>
-                      <label>
-                        <span>Confirm New Password</span>
-                        <div className={styles["auth__wrap"]}>
-                          <MdOutlinePassword />
-                          <input
-                            type="password"
-                            name="confirmNewPassword"
-                            value={confirmNewPassword}
-                            onChange={handlePasswordsChange}
-                          />
-                        </div>
-                      </label>
-                    </div>
-                    {loading_sec ? (
-                      <button type="button" className={styles["submit__btn2"]}>
-                        Updating...
-                      </button>
-                    ) : (
-                      <button type="submit" className={styles["submit__btn2"]}>
-                        Update Password
-                      </button>
-                    )}
-                  </form>
                 </div>
               )}
+              <form onSubmit={changePassword}>
+                <h2>Password Update</h2>
+                <div className={styles.fields}>
+                  <label>
+                    <span>Old Password</span>
+                    <div className={styles["auth__wrap"]}>
+                      <MdOutlinePassword />
+                      <input
+                        type="password"
+                        name="oldPassword"
+                        value={oldPassword}
+                        onChange={handlePasswordsChange}
+                      />
+                    </div>
+                  </label>
+                  <label>
+                    <span> New Password</span>
+                    <div className={styles["auth__wrap"]}>
+                      <MdOutlinePassword />
+                      <input
+                        type="password"
+                        name="newPassword"
+                        value={newPassword}
+                        onChange={handlePasswordsChange}
+                      />
+                    </div>
+                  </label>
+                  <label>
+                    <span>Confirm New Password</span>
+                    <div className={styles["auth__wrap"]}>
+                      <MdOutlinePassword />
+                      <input
+                        type="password"
+                        name="confirmNewPassword"
+                        value={confirmNewPassword}
+                        onChange={handlePasswordsChange}
+                      />
+                    </div>
+                  </label>
+                </div>
+                {loading_sec ? (
+                  <button type="button" className={styles["submit__btn2"]}>
+                    Updating...
+                  </button>
+                ) : (
+                  <button type="submit" className={styles["submit__btn2"]}>
+                    Update Password
+                  </button>
+                )}
+              </form>
             </>
           )}
         </div>

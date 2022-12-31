@@ -197,43 +197,6 @@ export default function PropertyDetail() {
             </div>
 
             <Comments propertyID={property._id} slug={property.slug} />
-            <div className={styles["save__for__later"]}>
-              {alert && (
-                <p
-                  className={styles.alert}
-                  style={{
-                    width: "fit-content",
-                    fontSize: ".9rem",
-                    color: "#ae8625",
-                  }}
-                >
-                  <BsInfoLg />
-                  {alert}
-                </p>
-              )}
-              <h3>
-                {" "}
-                <BsBookmarkPlus />
-                Bookmark Property
-              </h3>
-              <p>
-                {" "}
-                Wish to save this property to your bookmarks to view later?
-                click on the button below...
-              </p>
-              {loading ? (
-                <button className={styles["bookmark__btn"]} disabled>
-                  <BeatLoader loading={loading} size={10} color={"#fff"} />
-                </button>
-              ) : (
-                <button
-                  //   onClick={() => addToBookmarks(property)}
-                  className={styles["bookmark__btn"]}
-                >
-                  Add to bookmarks
-                </button>
-              )}
-            </div>
           </div>
           <RightDetails property={property} refetch={refetch} />
         </div>
