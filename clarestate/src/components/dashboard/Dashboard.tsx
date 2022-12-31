@@ -14,7 +14,7 @@ import { TbPhone } from "react-icons/tb";
 import { HiOutlineMail } from "react-icons/hi";
 import { RiFolderUserLine } from "react-icons/ri";
 import { server_url, updateUser } from "../../services/users_services";
-import { PulseLoader } from "react-spinners";
+import { FadeLoader, PulseLoader } from "react-spinners";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
@@ -129,9 +129,9 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  //   useEffect(() => {
+  //     refetch();
+  //   }, []);
 
   const fetchUserProperties = async () => {
     return await axios.get(`${server_url}/api/users/my-properties`, {
@@ -148,6 +148,7 @@ export default function Dashboard() {
   );
 
   const properties = data?.data.properties;
+  console.log(properties);
 
   if (isLoading || !properties) {
     return (
@@ -272,97 +273,111 @@ export default function Dashboard() {
         </div>
         <div className={styles["right__dashboard"]}>
           <h1>Properties you added</h1>
-          {properties.length === 0 ? (
-            <h3>You have not added any properties yet</h3>
+          {isLoading ? (
+            <h2 className={styles["no__results"]}>
+              <FadeLoader
+                loading={loading}
+                //@ts-ignore
+                size={10}
+                speedMultiplie={3}
+                color="rgb(18, 140, 200)"
+              />
+            </h2>
           ) : (
-            <div className={styles["users__prop"]}>
-              <h3>
-                You have added {properties.length}{" "}
-                {properties.length === 1 ? "property" : "properties"} to
-                Clarestate.
-              </h3>
-              {properties.map((property: any) => {
-                const { name, price, slug, purpose } = property;
-                return (
-                  <div className={styles.card}>
-                    <div>
-                      <b>Property Name:</b>
-                      &nbsp;{name}
+            <>
+              {properties.length === 0 ? (
+                <h3>You have not added any properties yet</h3>
+              ) : (
+                <div className={styles["users__prop"]}>
+                  <h3>
+                    You have added {properties.length}{" "}
+                    {properties.length === 1 ? "property" : "properties"} to
+                    Clarestate.
+                  </h3>
+                  {properties.map((property: any) => {
+                    const { name, price, slug, purpose } = property;
+                    return (
+                      <div className={styles.card}>
+                        <div>
+                          <b>Property Name:</b>
+                          &nbsp;{name}
+                        </div>
+                        <div>
+                          <b>Property Price:</b>
+                          &nbsp;NGN {new Intl.NumberFormat().format(price)}
+                        </div>
+                        <div
+                          className={
+                            purpose === "Sale"
+                              ? `${styles.sale} ${styles.purpose}`
+                              : purpose === "Rent"
+                              ? `${styles.rent}  ${styles.purpose}`
+                              : `${styles.shortlet}  ${styles.purpose}`
+                          }
+                        >
+                          <span> For {purpose}</span>
+                        </div>
+                        <Link to={`/property/${slug}`}>
+                          <span className={styles.details}>
+                            <AiOutlineEye />
+                          </span>
+                        </Link>
+                      </div>
+                    );
+                  })}
+                  <form onSubmit={changePassword}>
+                    <h2>Password Update</h2>
+                    <div className={styles.fields}>
+                      <label>
+                        <span>Old Password</span>
+                        <div className={styles["auth__wrap"]}>
+                          <MdOutlinePassword />
+                          <input
+                            type="password"
+                            name="oldPassword"
+                            value={oldPassword}
+                            onChange={handlePasswordsChange}
+                          />
+                        </div>
+                      </label>
+                      <label>
+                        <span> New Password</span>
+                        <div className={styles["auth__wrap"]}>
+                          <MdOutlinePassword />
+                          <input
+                            type="password"
+                            name="newPassword"
+                            value={newPassword}
+                            onChange={handlePasswordsChange}
+                          />
+                        </div>
+                      </label>
+                      <label>
+                        <span>Confirm New Password</span>
+                        <div className={styles["auth__wrap"]}>
+                          <MdOutlinePassword />
+                          <input
+                            type="password"
+                            name="confirmNewPassword"
+                            value={confirmNewPassword}
+                            onChange={handlePasswordsChange}
+                          />
+                        </div>
+                      </label>
                     </div>
-                    <div>
-                      <b>Property Price:</b>
-                      &nbsp;NGN {new Intl.NumberFormat().format(price)}
-                    </div>
-                    <div
-                      className={
-                        purpose === "Sale"
-                          ? `${styles.sale} ${styles.purpose}`
-                          : purpose === "Rent"
-                          ? `${styles.rent}  ${styles.purpose}`
-                          : `${styles.shortlet}  ${styles.purpose}`
-                      }
-                    >
-                      <span> For {purpose}</span>
-                    </div>
-                    <Link to={`/property/${slug}`}>
-                      <span className={styles.details}>
-                        <AiOutlineEye />
-                      </span>
-                    </Link>
-                  </div>
-                );
-              })}
-              <form onSubmit={changePassword}>
-                <h2>Password Update</h2>
-                <div className={styles.fields}>
-                  <label>
-                    <span>Old Password</span>
-                    <div className={styles["auth__wrap"]}>
-                      <MdOutlinePassword />
-                      <input
-                        type="password"
-                        name="oldPassword"
-                        value={oldPassword}
-                        onChange={handlePasswordsChange}
-                      />
-                    </div>
-                  </label>
-                  <label>
-                    <span> New Password</span>
-                    <div className={styles["auth__wrap"]}>
-                      <MdOutlinePassword />
-                      <input
-                        type="password"
-                        name="newPassword"
-                        value={newPassword}
-                        onChange={handlePasswordsChange}
-                      />
-                    </div>
-                  </label>
-                  <label>
-                    <span>Confirm New Password</span>
-                    <div className={styles["auth__wrap"]}>
-                      <MdOutlinePassword />
-                      <input
-                        type="password"
-                        name="confirmNewPassword"
-                        value={confirmNewPassword}
-                        onChange={handlePasswordsChange}
-                      />
-                    </div>
-                  </label>
+                    {loading_sec ? (
+                      <button type="button" className={styles["submit__btn2"]}>
+                        Updating...
+                      </button>
+                    ) : (
+                      <button type="submit" className={styles["submit__btn2"]}>
+                        Update Password
+                      </button>
+                    )}
+                  </form>
                 </div>
-                {loading_sec ? (
-                  <button type="button" className={styles["submit__btn2"]}>
-                    Updating...
-                  </button>
-                ) : (
-                  <button type="submit" className={styles["submit__btn2"]}>
-                    Update Password
-                  </button>
-                )}
-              </form>
-            </div>
+              )}
+            </>
           )}
         </div>
       </div>

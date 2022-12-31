@@ -11,14 +11,12 @@ const product_slice = createSlice({
   reducers: {
     SET_CAREGORIES: (state, action) => {
       const properties = action.payload;
-      console.log(properties);
       let locations_array: any = [];
       properties?.map((property: any) => {
         const { location } = property;
         return locations_array.push(location);
       });
       const locations = [...new Set(locations_array)];
-      console.log(locations);
 
       //@ts-ignore
       state.categories = locations;

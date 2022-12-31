@@ -5,12 +5,25 @@
 .dashboard {
   @include container();
   padding-top: 3rem;
+  @include mQ(900px) {
+    padding-bottom: 6rem;
+    flex-direction: column;
+  }
   .dashboard__wrapper {
     display: flex;
+    @include mQ(900px) {
+      flex-direction: column;
+    }
     .left__dashboard {
       width: 50%;
       border-right: 1px solid rgb(226, 225, 225);
       padding-right: 0.8rem;
+      @include mQ(900px) {
+        width: 100%;
+        border-right: 0;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgb(226, 225, 225);
+      }
       .user__det {
         position: relative;
         margin-bottom: 1rem;
@@ -30,6 +43,12 @@
         .fields {
           @include grid(repeat(2, 1fr), 0.3rem);
           row-gap: 1rem;
+          @include mQ(900px) {
+            grid-template-columns: 1fr;
+            textarea {
+              width: 100%;
+            }
+          }
         }
         label {
           display: block;
@@ -77,6 +96,9 @@
           border: 0;
           outline: 0;
           cursor: pointer;
+          @include mQ(900px) {
+            width: 100%;
+          }
         }
       }
       .form__label {
@@ -127,6 +149,11 @@
     .right__dashboard {
       width: 50%;
       padding-left: 0.8rem;
+      @include mQ(900px) {
+        width: 100%;
+        padding-left: 0;
+        padding-top: 0.7rem;
+      }
       .users__prop {
         .card {
           margin-top: 1rem;
@@ -166,6 +193,9 @@
           @include grid(repeat(3, 1fr), 0.3rem);
           row-gap: 1rem;
           padding-top: 1rem;
+          @include mQ(900px) {
+            grid-template-columns: 1fr;
+          }
         }
         label {
           display: block;
