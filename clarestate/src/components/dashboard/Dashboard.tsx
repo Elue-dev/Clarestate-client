@@ -20,6 +20,7 @@ import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye } from "react-icons/ai";
 import Loader from "../../utils/Loader";
+import { motion } from "framer-motion";
 import { updatePassword } from "../../services/auth_services";
 
 const passwordStates = {
@@ -159,7 +160,12 @@ export default function Dashboard() {
   }
 
   return (
-    <section className={styles.dashboard}>
+    <motion.section
+      className={styles.dashboard}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.1 }}
+    >
       <div className={styles["dashboard__wrapper"]}>
         <div className={styles["left__dashboard"]}>
           <div className={styles["user__det"]}>
@@ -381,6 +387,6 @@ export default function Dashboard() {
           )}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

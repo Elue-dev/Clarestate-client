@@ -23,6 +23,7 @@
         border-right: 0;
         padding-bottom: 2rem;
         border-bottom: 1px solid rgb(226, 225, 225);
+        padding-right: 0;
       }
       .user__det {
         position: relative;
@@ -44,10 +45,13 @@
           @include grid(repeat(2, 1fr), 0.3rem);
           row-gap: 1rem;
           @include mQ(900px) {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          @include mQ(600px) {
             grid-template-columns: 1fr;
-            textarea {
-              width: 100%;
-            }
+          }
+          textarea {
+            width: 100%;
           }
         }
         label {
@@ -73,6 +77,9 @@
             margin-bottom: 0;
             background: transparent;
           }
+          textarea {
+            width: 1005;
+          }
           .auth__wrap {
             display: flex;
             border: 1px solid darkgray;
@@ -96,7 +103,7 @@
           border: 0;
           outline: 0;
           cursor: pointer;
-          @include mQ(900px) {
+          @include mQ(600px) {
             width: 100%;
           }
         }
@@ -193,7 +200,7 @@
           @include grid(repeat(3, 1fr), 0.3rem);
           row-gap: 1rem;
           padding-top: 1rem;
-          @include mQ(900px) {
+          @include mQ(600px) {
             grid-template-columns: 1fr;
           }
         }
