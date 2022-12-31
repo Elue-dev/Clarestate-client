@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCommentMedical, FaUserEdit } from "react-icons/fa";
@@ -21,9 +21,12 @@ import { errorToast } from "../../../utils/alerts";
 import {
   createComment,
   removeComment,
+  updateComment,
 } from "../../../services/comments_service";
-import { ClipLoader } from "react-spinners";
+import { ClipLoader, PulseLoader } from "react-spinners";
 import Notiflix from "notiflix";
+import { TbEdit } from "react-icons/tb";
+import moment from "moment";
 
 interface idType {
   propertyID: string;
@@ -34,14 +37,21 @@ export default function Comments({ propertyID, slug }: idType) {
   const [comment, setComment] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [showCommentForm, setShowCommentForm] = useState(false);
-  const [delLoading, setDelLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [ID, setID] = useState("");
+  const commentRef = useRef<any | undefined>();
 
   const [loading, setLoading] = useState(false);
+  const [delLoading, setDelLoading] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const currentUser: any = useSelector(getUser);
   const token: any = useSelector(getUserToken);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  let currCommID: string;
 
   const fetchComments = async () => {
     return await axios.get(
@@ -96,9 +106,9 @@ export default function Comments({ propertyID, slug }: idType) {
       setLoading(true);
       const response = await createComment(propertyID, { comment }, token);
       if (response) {
+        refetch();
         setShowCommentForm(false);
         setComment("");
-        setTimeout(() => location.assign(`/property/${slug}`), 1500);
       }
       setLoading(false);
     } catch (error) {
@@ -122,7 +132,7 @@ export default function Comments({ propertyID, slug }: idType) {
   const confirmDelete = (commentID: string) => {
     Notiflix.Confirm.show(
       "Delete Comment",
-      "Are you sure you want to delete your commennt on this property?",
+      "Are you sure you want to delete your comment on this property?",
       "DELETE",
       "CLOSE",
       function okCb() {
@@ -137,6 +147,36 @@ export default function Comments({ propertyID, slug }: idType) {
         cssAnimationStyle: "zoom",
       }
     );
+  };
+
+  const editComment = async (comment: string, commentID: string) => {
+    setID(commentID);
+
+    setShowCommentForm(!showCommentForm);
+    setIsEditing(!isEditing);
+    window.scrollBy(0, 390);
+    setComment(comment);
+  };
+
+  const submitUpdatedComment = async () => {
+    if (!comment) {
+      return errorToast("Please add your comment", "updtcommerror");
+    }
+
+    try {
+      setEditLoading(true);
+      const response = await updateComment(ID, token, { comment });
+      if (response) {
+        setShowCommentForm(false);
+        setIsEditing(false);
+        setComment("");
+        refetch();
+      }
+      setEditLoading(false);
+    } catch (error) {
+      setEditLoading(false);
+      console.log(error);
+    }
   };
 
   return (
@@ -168,7 +208,7 @@ export default function Comments({ propertyID, slug }: idType) {
           </>
         ) : (
           comments.map((com: any, index: number) => {
-            const { comment, user, createdAt, _id } = com;
+            const { comment, user, createdAt, _id, updatedAt } = com;
             return (
               //@ts-ignore
               <ul key={index} className={contents}>
@@ -182,34 +222,42 @@ export default function Comments({ propertyID, slug }: idType) {
                     {currentUser?._id === user._id ? (
                       <>
                         <MdOutlineDateRange />
-                        Added by you on {new Date(createdAt).toDateString()}
+                        Added by you: {moment(createdAt).fromNow()}
                       </>
                     ) : (
                       <>
                         <MdOutlineDateRange />
-                        {new Date(createdAt).toDateString()}
+                        {moment(createdAt).fromNow()}
                       </>
                     )}
                   </div>
                 </li>
                 <div className={styles["del__comm"]}>
                   {currentUser?._id === user._id && (
-                    <span
-                      className={styles["del__rev"]}
-                      onClick={() => confirmDelete(_id)}
-                    >
-                      {delLoading ? (
-                        <ClipLoader
-                          loading={delLoading}
-                          //@ts-ignore
-                          size={20}
-                          className={styles.FadeLoader}
-                          color="crimson"
-                        />
-                      ) : (
-                        <MdOutlineDeleteForever color="crimson" size="20px" />
-                      )}
-                    </span>
+                    <>
+                      <span
+                        className={styles["del__rev"]}
+                        onClick={() => editComment(comment, _id)}
+                      >
+                        <TbEdit color="green" size="20px" />
+                      </span>
+                      <span
+                        className={styles["del__rev"]}
+                        onClick={() => confirmDelete(_id)}
+                      >
+                        {delLoading ? (
+                          <ClipLoader
+                            loading={delLoading}
+                            //@ts-ignore
+                            size={20}
+                            className={styles.FadeLoader}
+                            color="crimson"
+                          />
+                        ) : (
+                          <MdOutlineDeleteForever color="crimson" size="20px" />
+                        )}
+                      </span>
+                    </>
                   )}
                 </div>
               </ul>
@@ -243,6 +291,7 @@ export default function Comments({ propertyID, slug }: idType) {
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Enter your Comment"
+            ref={commentRef}
             //@ts-ignore
             cols=""
             //@ts-ignore
@@ -254,12 +303,42 @@ export default function Comments({ propertyID, slug }: idType) {
               className={styles["submit__comment__btn"]}
               disabled
             >
-              <BeatLoader loading={loading} size={10} color={"#fff"} />
+              <PulseLoader loading={loading} size={10} color={"#000"} />
             </button>
           ) : (
-            <button type="submit" className={styles["submit__comment__btn"]}>
-              Submit comment
-            </button>
+            <>
+              {isEditing ? (
+                <>
+                  {editLoading ? (
+                    <p
+                      className={styles["submit__comment__btn"]}
+                      style={{ display: "inline" }}
+                    >
+                      <PulseLoader
+                        loading={editLoading}
+                        size={10}
+                        color={"#000"}
+                      />
+                    </p>
+                  ) : (
+                    <p
+                      onClick={submitUpdatedComment}
+                      className={styles["submit__comment__btn"]}
+                      style={{ display: "inline" }}
+                    >
+                      Edit comment
+                    </p>
+                  )}
+                </>
+              ) : (
+                <button
+                  type="submit"
+                  className={styles["submit__comment__btn"]}
+                >
+                  Submit comment
+                </button>
+              )}
+            </>
           )}
 
           <button

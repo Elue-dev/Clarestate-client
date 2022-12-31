@@ -42,3 +42,23 @@ export const removeComment = async (commenID: string, token: string) => {
     errorToast(error.response.data.message, "delcomcerr");
   }
 };
+
+export const updateComment = async (
+  commenID: string,
+  token: string,
+  comment: any
+) => {
+  try {
+    const response = await axios.patch(
+      `${server_url}/api/comments/${commenID}`,
+      comment,
+      { headers: { authorization: `Bearer ${token}` } }
+    );
+    if (response?.data.status === "success") {
+      successToast(response?.data.message, "delcomsuccess");
+    }
+    return response.data;
+  } catch (error: any) {
+    errorToast(error.response.data.message, "delcomcerr");
+  }
+};
