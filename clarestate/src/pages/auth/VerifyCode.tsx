@@ -88,13 +88,6 @@ export default function VerifyCode() {
     } catch (error) {
       setLoading_sec(false);
     }
-
-    setLoading_sec(true);
-    const response = await sendVerificationCode(email);
-    if (response) {
-      setShowInput(false);
-    }
-    setLoading_sec(false);
   };
 
   return (
@@ -115,7 +108,7 @@ export default function VerifyCode() {
                 return (
                   <input
                     className={styles["otp__field"]}
-                    type="text"
+                    type="tel"
                     name="otp"
                     //@ts-ignore
                     maxLength="1"

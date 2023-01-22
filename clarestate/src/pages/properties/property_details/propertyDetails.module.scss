@@ -14,19 +14,22 @@
   @include flexBox(space-around, center, row);
 }
 
-//  .popup {
-//     position: fixed;
-//     background: rgba(0, 0, 0, 0.8);
-//     width: 100vw;
-//     height: 100%;
-//   }
-
+b {
+  color: #333;
+}
 .property__details {
   width: 100%;
   padding-top: 2rem;
   padding-bottom: 8rem;
   min-height: 100vh;
   z-index: 200;
+  p {
+    color: $color-dark-pri;
+  }
+  h2 {
+    display: flex;
+    justify-content: left;
+  }
   .contacts__bottom__wrapper {
     box-shadow: $box-shadow-100;
     position: fixed;
@@ -151,11 +154,19 @@
         margin-bottom: 0.8rem;
         font-weight: 600;
       }
+      .available {
+        color: rgba(136, 229, 29, 0.575);
+        font-weight: 700;
+      }
+      .navailable {
+        color: rgba(243, 90, 52, 0.411);
+        font-weight: 700;
+      }
+
       .details__warning {
         @include flexBox(flex-start, center, center);
-        // width: fit-content;
         gap: 0.6rem;
-        background: rgb(193, 180, 100);
+        background: darkgray;
         color: #fff;
         padding: 0.1rem 0.4rem;
         border-radius: 0.3rem;
@@ -166,14 +177,32 @@
           color: #fff;
         }
       }
+      .disclaimer {
+        @include flexBox(center, center, column);
+        padding-bottom: 1rem;
+        @include mQ(600px) {
+          font-size: 0.7rem;
+        }
+      }
     }
 
     .property__features {
+      text-align: left;
       padding-top: 1.3rem;
       padding-bottom: 1.3rem;
       border-bottom: 0.1px solid rgb(190, 190, 190);
       h2 {
         padding-bottom: 0.9rem;
+      }
+      .interior__info {
+        display: flex;
+        gap: 5rem;
+        padding-bottom: 1rem;
+        p {
+          :first-child {
+            color: $color-secondary;
+          }
+        }
       }
       .flex__features {
         @include grid(repeat(2, 1fr), 1rem);
@@ -195,7 +224,7 @@
       line-height: 1.9;
       border-bottom: 0.1px solid rgb(190, 190, 190);
       h2 {
-        @include flexBox(flex-start, center, center);
+        // @include flexBox(flex-start, center, center);
         gap: 0.3rem;
         margin-bottom: 0.5rem;
         :first-child {

@@ -4,12 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaCommentMedical, FaUserEdit } from "react-icons/fa";
 import { MdOutlineDateRange, MdOutlineDeleteForever } from "react-icons/md";
 import { FaRegComment } from "react-icons/fa";
-import { BiDotsHorizontal } from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import styles from "./comments.module.scss";
 import { useQuery } from "react-query";
 import axios from "axios";
-import BeatLoader from "react-spinners/BeatLoader";
 import { server_url } from "../../../utils/junk";
 import {
   getUser,
@@ -17,7 +15,7 @@ import {
   SAVE_URL,
   selectIsLoggedIn,
 } from "../../../redux/slices/auth_slice";
-import { errorToast } from "../../../utils/alerts";
+import { errorHotToast } from "../../../utils/alerts";
 import {
   createComment,
   removeComment,
@@ -91,7 +89,7 @@ export default function Comments({ propertyID }: idType) {
       navigate("/auth/login");
       setLoading(false);
       setComment("");
-      errorToast("You have to be logged in to add comments", "unauthcomm");
+      errorHotToast("You have to be logged in to add comments");
     } else {
       setShowCommentForm(true);
     }
@@ -100,7 +98,7 @@ export default function Comments({ propertyID }: idType) {
   const addComment = async (e: FormEvent) => {
     e.preventDefault();
     if (!comment) {
-      return errorToast("Please add your comment", "addcommerror");
+      return errorHotToast("Please add your comment");
     }
     try {
       setLoading(true);
@@ -160,7 +158,7 @@ export default function Comments({ propertyID }: idType) {
 
   const submitUpdatedComment = async () => {
     if (!comment) {
-      return errorToast("Please add your comment", "updtcommerror");
+      return errorHotToast("Please add your comment");
     }
 
     try {

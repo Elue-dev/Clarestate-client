@@ -2,7 +2,7 @@ import { server_url } from "../../../utils/junk";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { FadeLoader, MoonLoader } from "react-spinners";
+import { PulseLoader } from "react-spinners";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { BsCamera } from "react-icons/bs";
@@ -15,7 +15,7 @@ import Loader from "../../../utils/Loader";
 export default function QueriedProperty() {
   const queryString = useLocation().search;
   const queryParams = new URLSearchParams(queryString);
-  const location = queryParams.get("location");
+  const city = queryParams.get("city");
   const purpose = queryParams.get("purpose");
   const [loading, setLoading] = useState(true);
 
@@ -27,15 +27,12 @@ export default function QueriedProperty() {
 
   const getQueriedProperties = async () => {
     const response = await axios.get(
-      `${server_url}/api/properties?location=${location}&purpose=${purpose}`
+      `${server_url}/api/properties?city=${city}&purpose=${purpose}`
     );
     setProperties(response.data?.properties);
+
     setLoading(false);
   };
-
-  console.log(loading);
-
-  console.log(properties);
 
   if (!properties) {
     return <Loader />;
@@ -44,18 +41,12 @@ export default function QueriedProperty() {
   return (
     <section className={styles.query}>
       <div className={styles.heading}>
-        Properties in <span>{location}</span> for <span>{purpose}</span>
+        Properties in <span>{city}</span> for <span>{purpose}</span>
       </div>
 
       {loading ? (
         <h2 className={styles["no__results"]}>
-          <FadeLoader
-            loading={loading}
-            //@ts-ignore
-            size={10}
-            speedMultiplie={3}
-            color="rgb(18, 140, 200)"
-          />
+          <PulseLoader loading={loading} size={10} color="rgb(18, 140, 200)" />
         </h2>
       ) : (
         <>
@@ -68,79 +59,81 @@ export default function QueriedProperty() {
             </h3>
           )}
 
-          {properties?.map((property: any) => {
-            const {
-              _id,
-              name,
-              price,
-              purpose,
-              slug,
-              images,
-              availability,
-              createdAt,
-              toilets,
-              bedrooms,
-              bathrooms,
-            } = property;
-            return (
-              <Link key={_id} to={`/property/${slug}`}>
-                <div className={styles["properties__details"]}>
-                  <div className={styles["properties__details__image"]}>
-                    <img src={images[0]} alt={name} />
-                    <p
-                      className={styles["property__availability"]}
-                      style={{
-                        background:
-                          availability === "Available"
-                            ? "rgba(136, 229, 29, 0.575)"
-                            : "rgba(243, 90, 52, 0.411)",
-                      }}
-                    >
-                      {" "}
-                      {availability}
-                    </p>
-                    <p className={styles["property__purpose"]}>
-                      <span>{purpose}</span>
-                    </p>
-                    <span className={styles["camera__icon"]}>
-                      <BsCamera />
-                      <span>{images.length}</span>
-                    </span>
-                  </div>
-                  <div className={styles["properties__details__texts"]}>
-                    <p className={styles["property__name"]}>
-                      <span>{name}</span>
-                    </p>
-
-                    <p className={styles["property__id"]}>
-                      <MdDateRange />
-                      {new Date(createdAt).toDateString()}
-                    </p>
-                    <p className={styles["property__location"]}>
-                      <ImLocation2 />
-                      {location}
-                    </p>
-                    <div className={styles["interior__info"]}>
-                      <p>
-                        <FaBed /> {bedrooms}
+          <div className={styles["properties__wrap"]}>
+            {properties?.map((property: any) => {
+              const {
+                _id,
+                name,
+                price,
+                purpose,
+                slug,
+                images,
+                availability,
+                createdAt,
+                toilets,
+                bedrooms,
+                bathrooms,
+                location,
+              } = property;
+              return (
+                <Link key={_id} to={`/property/${slug}`}>
+                  <div className={styles["properties__details"]}>
+                    <div className={styles["properties__details__image"]}>
+                      <img src={images[0]} alt={name} />
+                      <p
+                        className={styles["property__availability"]}
+                        style={{
+                          background:
+                            availability === "Available"
+                              ? "rgba(136, 229, 29, 0.575)"
+                              : "rgba(243, 90, 52, 0.411)",
+                        }}
+                      >
+                        {" "}
+                        {availability}
                       </p>
-                      <p>
-                        <FaToilet /> {toilets}
+                      <p className={styles["property__purpose"]}>
+                        <span>{purpose}</span>
+                      </p>
+                      <span className={styles["camera__icon"]}>
+                        <BsCamera />
+                        <span>{images.length}</span>
+                      </span>
+                    </div>
+                    <div className={styles["properties__details__texts"]}>
+                      <p className={styles["property__name"]}>
+                        <span>{name}</span>
                       </p>
 
-                      <p>
-                        <FaBath /> {bathrooms}
+                      <p className={styles["property__id"]}>
+                        <MdDateRange />
+                        {new Date(createdAt).toDateString()}
+                      </p>
+                      <p className={styles["property__location"]}>
+                        <ImLocation2 />
+                        {location}
+                      </p>
+                      <div className={styles["interior__info"]}>
+                        <p>
+                          <FaBed /> {bedrooms}
+                        </p>
+                        <p>
+                          <FaToilet /> {toilets}
+                        </p>
+                        <p>
+                          <FaBath /> {bathrooms}
+                        </p>
+                      </div>
+                      <p className={styles["property__price"]}>
+                        <span>NGN{new Intl.NumberFormat().format(price)}</span>
+                        /night
                       </p>
                     </div>
-                    <p className={styles["property__price"]}>
-                      <span>NGN{new Intl.NumberFormat().format(price)}</span>
-                      /night
-                    </p>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
+          </div>
         </>
       )}
     </section>

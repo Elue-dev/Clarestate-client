@@ -2,30 +2,35 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 const initialState = {
-  categories: [],
+  cities: [],
+  properties: [],
 };
 
 const product_slice = createSlice({
   name: "property",
   initialState,
   reducers: {
-    SET_CAREGORIES: (state, action) => {
+    SET_CITIES: (state, action) => {
       const properties = action.payload;
-      let locations_array: any = [];
+      let cities_array: any = [];
       properties?.map((property: any) => {
-        const { location } = property;
-        return locations_array.push(location);
+        const { city } = property;
+        return cities_array.push(city);
       });
-      const locations = [...new Set(locations_array)];
+      const cities = [...new Set(cities_array)];
 
       //@ts-ignore
-      state.categories = locations;
+      state.cities = cities;
+    },
+    SET_PROPERTIES: (state, action) => {
+      state.properties = action.payload;
     },
   },
 });
 
-export const { SET_CAREGORIES } = product_slice.actions;
+export const { SET_CITIES, SET_PROPERTIES } = product_slice.actions;
 
-export const selectLocations = (state: RootState) => state.property.categories;
+export const selectCities = (state: RootState) => state.property.cities;
+export const selectProperties = (state: RootState) => state.property.properties;
 
 export default product_slice.reducer;

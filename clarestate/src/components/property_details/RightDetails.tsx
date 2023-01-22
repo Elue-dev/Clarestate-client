@@ -1,17 +1,15 @@
 import {
-  MdOutlineAlternateEmail,
   MdOutlineDeleteForever,
   MdOutlineRealEstateAgent,
   MdOutlineSubject,
 } from "react-icons/md";
-import { FaUser } from "react-icons/fa";
 import StarRatings from "react-star-ratings";
 import StarsRating from "react-star-rate";
 import styles from "./rightDetails.module.scss";
 import { BsTelephoneForwardFill } from "react-icons/bs";
-import { BeatLoader, ClipLoader } from "react-spinners";
+import { ClipLoader, PulseLoader } from "react-spinners";
 import { TiUserAddOutline } from "react-icons/ti";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { createReview, removeReview } from "../../services/review_service";
 import { useSelector } from "react-redux";
 import {
@@ -20,42 +18,60 @@ import {
   selectIsLoggedIn,
 } from "../../redux/slices/auth_slice";
 import moment from "moment";
-import { errorToast } from "../../utils/alerts";
+import { errorHotToast } from "../../utils/alerts";
 import { useNavigate } from "react-router-dom";
 import Notiflix from "notiflix";
+import { Link } from "react-router-dom";
+import { sendContactEmail } from "../../services/users_services";
+import { FiEdit } from "react-icons/fi";
+import { AiFillDelete } from "react-icons/ai";
+import { removeProperty } from "../../services/property_service";
 
 export default function RightDetails({ property, refetch }: any) {
   const [revLoading, setRevLoading] = useState(false);
-  const [delLoading, setDelLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [revDelLoading, setRevDelLoading] = useState(false);
+  const [delpropLoading, setDelPropLoading] = useState(false);
   const [rating, setRating] = useState<number | undefined>(0);
   const [review, setReview] = useState("");
+
   const [showInput, setShowInput] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [subject, setSubject] = useState("");
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const token: any = useSelector(getUserToken);
   const currentUser: any = useSelector(getUser);
   const navigate = useNavigate();
 
+  const revUserIDS: string[] = [];
+
+  property.reviews.map((review: any) => {
+    revUserIDS.push(review.user._id);
+  });
+
   const addReview = async () => {
     if (!isLoggedIn) {
-      errorToast("You have to be logged in to add reviews", "addreverror");
+      errorHotToast("You have to be logged in to add reviews");
       navigate("/auth/login");
       return;
-    } else if (!review) {
-      return errorToast("Please add your review", "addreverror2");
     } else if (!rating) {
-      return errorToast("Please leave a rating", "addrateerror");
+      return errorHotToast("Please leave a rating");
+    } else if (!review) {
+      return errorHotToast("Please add your review");
+    } else if (currentUser._id === property.addedBy._id) {
+      return errorHotToast("You cannot add reviews to properties you added");
+    } else if (revUserIDS.includes(currentUser._id)) {
+      return errorHotToast("You cannot add multiple reviews to a property");
     }
 
-    const revData = {
+    const reviewData = {
       review,
       rating,
     };
 
     try {
       setRevLoading(true);
-      await createReview(revData, property._id, token);
+      await createReview(reviewData, property._id, token);
       refetch();
       setReview("");
       setRating(0);
@@ -69,17 +85,17 @@ export default function RightDetails({ property, refetch }: any) {
 
   const deleteReview = async (revewID: string) => {
     try {
-      setDelLoading(true);
+      setRevDelLoading(true);
       await removeReview(revewID, token);
       refetch();
-      setDelLoading(false);
+      setRevDelLoading(false);
     } catch (error) {
-      setDelLoading(false);
+      setRevDelLoading(false);
       console.log(error);
     }
   };
 
-  const confirmDelete = (revewID: string) => {
+  const confirmRevDelete = (revewID: string) => {
     Notiflix.Confirm.show(
       "Delete Review",
       "Are you sure you want to delete your review on this property?",
@@ -99,11 +115,93 @@ export default function RightDetails({ property, refetch }: any) {
     );
   };
 
+  const deleteProperty = async (propertyID: string) => {
+    try {
+      setDelPropLoading(true);
+      const response = await removeProperty(propertyID, token);
+      if (response) {
+        navigate("/");
+      }
+      setDelPropLoading(false);
+    } catch (error) {
+      setDelPropLoading(false);
+      console.log(error);
+    }
+  };
+
+  const confirmPropDelete = (propertyID: string) => {
+    Notiflix.Confirm.show(
+      "Delete Property",
+      "Are you sure you want to delete this property?",
+      "DELETE",
+      "CLOSE",
+      function okCb() {
+        deleteProperty(propertyID);
+      },
+      function cancelCb() {},
+      {
+        width: "320px",
+        borderRadius: "5px",
+        titleColor: "crimson",
+        okButtonBackground: "crimson",
+        cssAnimationStyle: "zoom",
+      }
+    );
+  };
+
+  const sendEmail = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!isLoggedIn) {
+      errorHotToast("Please log in first");
+      navigate("/auth/login");
+      return;
+    }
+
+    if (!subject || !message) {
+      return errorHotToast("Both subject and message are required");
+    }
+
+    const contactData = { message, subject };
+    try {
+      setLoading(true);
+      await sendContactEmail(token, contactData);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <div className={styles["right__contents"]}>
         <div className={styles["contact__info"]}>
           <div className={styles["contact__info__details"]}>
+            {currentUser?._id === property.addedBy._id ||
+            currentUser?.role === "admin" ? (
+              <div className={styles.actions}>
+                <Link
+                  to={`/edit-property/${property.slug}/${property._id}`}
+                  style={{ fontWeight: 700, color: "#edb637" }}
+                >
+                  <FiEdit size={20} color="green" />
+                </Link>
+                <span onClick={() => confirmPropDelete(property._id)}>
+                  {delpropLoading ? (
+                    <ClipLoader
+                      loading={delpropLoading}
+                      //@ts-ignore
+                      size={20}
+                      color="crimson"
+                    />
+                  ) : (
+                    <AiFillDelete size={23} color="crimson" />
+                  )}
+                </span>
+              </div>
+            ) : null}
+
             <h2>
               <MdOutlineRealEstateAgent style={{ color: "#888" }} />
               Contact Agent
@@ -113,39 +211,22 @@ export default function RightDetails({ property, refetch }: any) {
               <div className={styles.contact}>
                 <a href={`tel:${property.agentContact}`}>
                   <BsTelephoneForwardFill />
-                  &nbsp; {property.agentContact}
+                  &nbsp; Call Agent
                 </a>
               </div>
             </div>
           </div>
         </div>
-
         <div>
           <h3>Need to reach out?</h3>
-          <form>
-            <label>
-              <FaUser />
-              <input
-                type="text"
-                name="user_name"
-                placeholder="Full Name"
-                required
-              />
-            </label>
-            <label>
-              <MdOutlineAlternateEmail />
-              <input
-                type="email"
-                name="user_email"
-                placeholder="Your email"
-                required
-              />
-            </label>
+          <form onSubmit={sendEmail}>
             <label>
               <MdOutlineSubject />
               <input
                 type="text"
                 name="subject"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
                 placeholder="Subject, e.g Enquiry about a property"
                 required
               />
@@ -155,6 +236,7 @@ export default function RightDetails({ property, refetch }: any) {
                 name="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                placeholder="e.g I want to book 2 bedroom apartment in Lekki"
                 cols={0}
                 rows={6}
                 required
@@ -166,7 +248,7 @@ export default function RightDetails({ property, refetch }: any) {
                 disabled
                 className={styles["property__message__btn"]}
               >
-                <BeatLoader loading={loading} size={10} color={"#fff"} />
+                <PulseLoader loading={loading} size={10} color={"#000"} />
               </button>
             ) : (
               <button
@@ -198,6 +280,7 @@ export default function RightDetails({ property, refetch }: any) {
             <div className={styles["add_rev"]}>
               <StarsRating
                 value={rating}
+                classNamePrefix="react-star-rate"
                 onChange={(rating) => {
                   setRating(rating);
                 }}
@@ -211,7 +294,7 @@ export default function RightDetails({ property, refetch }: any) {
                 onChange={(e) => setReview(e.target.value)}
               />
               {revLoading ? (
-                <button disabled>Processing...</button>
+                <button disabled>PROCESSING...</button>
               ) : (
                 <button onClick={addReview}>Add review</button>
               )}
@@ -235,11 +318,11 @@ export default function RightDetails({ property, refetch }: any) {
                       {currentUser?._id === user._id && (
                         <span
                           className={styles["del__rev"]}
-                          onClick={() => confirmDelete(_id)}
+                          onClick={() => confirmRevDelete(_id)}
                         >
-                          {delLoading ? (
+                          {revDelLoading ? (
                             <ClipLoader
-                              loading={delLoading}
+                              loading={revDelLoading}
                               //@ts-ignore
                               size={12}
                               color="crimson"
@@ -266,10 +349,26 @@ export default function RightDetails({ property, refetch }: any) {
               );
             })
           ) : (
-            <h3>No reviews for this property yet.</h3>
+            <h3>No reviews for this property.</h3>
           )}
         </div>
-        {/* <SimilarProducts /> */}
+        <div className={styles.adder}>
+          <div>
+            <img
+              src={property.addedBy.photo}
+              alt={property.addedBy.first_name}
+            />
+            <p>
+              <b>{`${property.addedBy.first_name} ${property.addedBy.last_name}`}</b>{" "}
+              added this property {moment(property.createdAt).fromNow()}.
+            </p>
+          </div>
+        </div>
+        <p className={styles.disclaimer}>
+          DISCLAIMER: We do not own any property here. This site is just a
+          personal project to showcase my skills. We are not selling or renting
+          any of these properties
+        </p>
       </div>
     </div>
   );

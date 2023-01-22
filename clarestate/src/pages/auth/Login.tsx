@@ -5,8 +5,13 @@ import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlinePassword } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { PulseLoader } from "react-spinners";
-import { useDispatch } from "react-redux";
-import { SET_ACTIVE_USER, SET_USER_TOKEN } from "../../redux/slices/auth_slice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  SAVE_URL,
+  selectPreviousURL,
+  SET_ACTIVE_USER,
+  SET_USER_TOKEN,
+} from "../../redux/slices/auth_slice";
 import { loginUser } from "../../services/auth_services";
 import styles from "./auth.module.scss";
 
@@ -21,6 +26,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const passwordRef = useRef<any | undefined>();
+  const previousURL = useSelector(selectPreviousURL);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -52,18 +58,32 @@ export default function Login() {
     }
   };
 
+  const redirectUser = () => {
+    if (previousURL.includes("property")) {
+      return navigate(-1);
+    } else if (previousURL.includes("contact")) {
+      return navigate(-1);
+    }
+    dispatch(SAVE_URL(""));
+    navigate("/");
+  };
+
   const signinUser = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
       setLoading(true);
       setError("");
+      const loginDetails = {
+        emailOrPhone: emailOrPhone.trim(),
+        password: password.trim(),
+      };
       if (validateForm()) {
-        const response = await loginUser(credentials);
+        const response = await loginUser(loginDetails);
         if (response) {
           dispatch(SET_ACTIVE_USER(response.user));
           dispatch(SET_USER_TOKEN(response.token));
-          navigate("/");
+          redirectUser();
         }
       }
       setLoading(false);
@@ -142,6 +162,10 @@ export default function Login() {
               </p>
             </div>
           </form>
+          <p className={styles.home}>
+            <Link to="/"> Home </Link>&nbsp; &nbsp;&copy;{" "}
+            {new Date().getFullYear()}. Clarestate Inc.
+          </p>
         </div>
         <div className={styles["right__section"]}>
           <span></span>

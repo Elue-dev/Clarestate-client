@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BiHomeAlt, BiLogInCircle } from "react-icons/bi";
-import { HiOutlineHomeModern } from "react-icons/hi2";
 import {
+  MdAddBusiness,
   MdOutlineAdminPanelSettings,
   MdOutlinePermContactCalendar,
 } from "react-icons/md";
@@ -32,7 +32,7 @@ export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const defaultImg = "https://i.ibb.co/4pDNDk1/avatar.png";
+  const defaultImg = "https://a0.muscache.com/defaults/user_pic-50x50.png?v=3";
 
   let initials;
 
@@ -123,6 +123,12 @@ export default function Header() {
                     <p>Contact</p>
                   </li>
                 </NavLink>
+                <NavLink to="/add-property">
+                  <li>
+                    <MdAddBusiness />
+                    <p>Add Property</p>
+                  </li>
+                </NavLink>
               </ul>
               <div
                 className={styles.auth}
@@ -185,36 +191,48 @@ export default function Header() {
           </header>
         </>
       ) : null}
-      <div className={styles["nav__bottom"]}>
-        <ul>
-          <NavLink to="/">
-            <li>
-              <BiHomeAlt />
-              <p>Home</p>
-            </li>
-          </NavLink>
-          <NavLink to="/all-properties">
-            <li>
-              <SiHomebridge />
-              <p>Properties</p>
-            </li>
-          </NavLink>
 
-          <NavLink to="/contact">
-            <li>
-              <MdOutlinePermContactCalendar />
-              <p>Contact</p>
-            </li>
-          </NavLink>
+      {!location.pathname.includes("auth") && (
+        <div className={styles["nav__bottom"]}>
+          <ul>
+            <NavLink to="/">
+              <li>
+                <BiHomeAlt />
+                <p>Home</p>
+              </li>
+            </NavLink>
+            <NavLink to="/all-properties">
+              <li>
+                <SiHomebridge />
+                <p>Properties</p>
+              </li>
+            </NavLink>
 
-          <NavLink to="admin/view-properties">
-            <li>
-              <div />
-              <button className={styles["admin__btn"]}>Admin</button>
-            </li>
-          </NavLink>
-        </ul>
-      </div>
+            <NavLink to="/contact">
+              <li>
+                <MdOutlinePermContactCalendar />
+                <p>Contact</p>
+              </li>
+            </NavLink>
+
+            <NavLink to="/add-property">
+              <li>
+                <MdAddBusiness />
+                <p>Add </p>
+              </li>
+            </NavLink>
+
+            <AdminOnlyLink>
+              <NavLink to="admin/view-properties">
+                <li>
+                  <div />
+                  <button className={styles["admin__btn"]}>Admin</button>
+                </li>
+              </NavLink>
+            </AdminOnlyLink>
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

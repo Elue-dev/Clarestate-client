@@ -1,37 +1,47 @@
 import { useState, FormEvent } from "react";
-import { BsInstagram } from "react-icons/bs";
-import { FaPhoneSquareAlt, FaUser } from "react-icons/fa";
+import { BsInstagram, BsLinkedin } from "react-icons/bs";
+import { FaPhoneSquareAlt } from "react-icons/fa";
 import { IoChatbubbles } from "react-icons/io5";
-import { GrMail } from "react-icons/gr";
-import { MdOutlineAlternateEmail, MdOutlineSubject } from "react-icons/md";
-import { SiRocketdotchat, SiFacebook } from "react-icons/si";
-import ReactWhatsapp from "react-whatsapp";
-// import Footer from "../../components/footer/Footer";
+import { MdOutlineSubject } from "react-icons/md";
 import { motion } from "framer-motion";
-import { BeatLoader } from "react-spinners";
+import { PulseLoader } from "react-spinners";
 import styles from "./contact.module.scss";
 import { useSelector } from "react-redux";
-import { getUserToken } from "../../redux/slices/auth_slice";
+import { getUserToken, selectIsLoggedIn } from "../../redux/slices/auth_slice";
 import { sendContactEmail } from "../../services/users_services";
-import { errorToast } from "../../utils/alerts";
+import { errorHotToast } from "../../utils/alerts";
+import { SiGmail } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
 
 export default function Contact() {
   const [message, setMessage] = useState("");
   const [subject, setSubject] = useState("");
   const [loading, setLoading] = useState(false);
   const token: any = useSelector(getUserToken);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const navigate = useNavigate();
 
   const sendEmail = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (!isLoggedIn) {
+      errorHotToast("Please log in first.");
+      navigate("/auth/login");
+      return;
+    }
+
     if (!subject || !message) {
-      return errorToast("Both subject and message are required", "cterror");
+      return errorHotToast("Both subject and message are required");
     }
 
     const contactData = { message, subject };
     try {
       setLoading(true);
-      await sendContactEmail(token, contactData);
+      const response = await sendContactEmail(token, contactData);
+      if (response) {
+        setSubject("");
+        setMessage("");
+      }
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -54,12 +64,10 @@ export default function Contact() {
 
       <div className={styles.socials}>
         <a href="mailto: eluewisdom@gmail.com">
-          <GrMail className={styles["c_icon"]} />
-          {/* <img src={facebook} alt="" className="c_icon" /> */}
+          <SiGmail className={styles["c_icon"]} />
         </a>
-        <a href="https://www.facebook.com/dubbysmooth">
-          <SiFacebook className={styles["c_icon"]} />
-          {/* <img src={facebook} alt="" className="c_icon" /> */}
+        <a href="https://www.linkedin.com/in/wisdom-elue-8822a5188">
+          <BsLinkedin className={styles["c_icon"]} />
         </a>
         <a href="https://www.instagram.com/wisdomelue">
           <BsInstagram className={styles["c_icon"]} />
@@ -76,12 +84,8 @@ export default function Contact() {
                 us directly
               </p>
               <p>
-                <b style={{ fontSize: "1.1rem" }}>Line 1:</b>
-                &nbsp;&nbsp;<a href="tel:2349052014239">+234 905 201 4239</a>
-              </p>
-              <p>
-                <b style={{ fontSize: "1.1rem" }}>Line 2:</b>
-                &nbsp;&nbsp;<a href="tel:348168945509">+234 816 894 5509</a>
+                <b style={{ fontSize: "1.1rem" }}>Admin Line:</b>
+                &nbsp;&nbsp;<a href="tel:2349052014239">Call Admin</a>
               </p>
             </div>
             <br />
@@ -126,7 +130,7 @@ export default function Contact() {
                   disabled
                   className={styles["property__message__btn"]}
                 >
-                  <BeatLoader loading={loading} size={10} color={"#fff"} />
+                  <PulseLoader loading={loading} size={10} color={"#000"} />
                 </button>
               ) : (
                 <button

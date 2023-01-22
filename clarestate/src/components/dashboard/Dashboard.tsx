@@ -21,7 +21,7 @@ import { AiOutlineEye } from "react-icons/ai";
 import Loader from "../../utils/Loader";
 import { motion } from "framer-motion";
 import { updatePassword } from "../../services/auth_services";
-import { errorToast } from "../../utils/alerts";
+import { errorHotToast } from "../../utils/alerts";
 
 const passwordStates = {
   oldPassword: "",
@@ -75,6 +75,18 @@ export default function Dashboard() {
     e.preventDefault();
 
     let imageUrl;
+
+    if (
+      fName === user.first_name &&
+      lName === user.last_name &&
+      uPhone === user.phone &&
+      uEmail === user.email &&
+      uBio === user.bio &&
+      !userPhoto
+    ) {
+      return errorHotToast("You have not made any changes to your profile");
+    }
+
     if (userPhoto && userPhoto?.type.includes("image")) {
       const image = new FormData();
       image.append("file", userPhoto);
@@ -87,6 +99,7 @@ export default function Dashboard() {
       );
       const imageData = await response.json();
       imageUrl = imageData.url.toString();
+      setUserPhoto(null);
     }
 
     const userData = {
@@ -117,10 +130,7 @@ export default function Dashboard() {
     e.preventDefault();
 
     if (!oldPassword || !newPassword || !confirmNewPassword) {
-      return errorToast(
-        "Please provide all three password credentials",
-        "uperror"
-      );
+      return errorHotToast("Please provide all three password credentials");
     }
 
     try {
@@ -151,6 +161,8 @@ export default function Dashboard() {
   );
 
   const properties = data?.data.properties;
+
+  refetch();
 
   if (isLoading || !properties) {
     return (
@@ -262,6 +274,7 @@ export default function Dashboard() {
                   <textarea
                     name="uBio"
                     value={uBio}
+                    rows={5}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -293,7 +306,9 @@ export default function Dashboard() {
           ) : (
             <>
               {properties.length === 0 ? (
-                <h3>You have not added any properties yet</h3>
+                <h3 className={styles.noprop}>
+                  You have not added any properties yet.
+                </h3>
               ) : (
                 <div className={styles["users__prop"]}>
                   <h3>
@@ -304,14 +319,14 @@ export default function Dashboard() {
                   {properties.map((property: any) => {
                     const { name, price, slug, purpose } = property;
                     return (
-                      <div className={styles.card}>
+                      <div className={styles.card} key={slug}>
                         <div>
                           <b>Property Name:</b>
                           &nbsp;{name}
                         </div>
                         <div>
                           <b>Property Price:</b>
-                          &nbsp;NGN {new Intl.NumberFormat().format(price)}
+                          &nbsp;₦{new Intl.NumberFormat().format(price)}
                         </div>
                         <div
                           className={

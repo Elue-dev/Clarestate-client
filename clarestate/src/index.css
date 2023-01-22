@@ -2,7 +2,6 @@
 * {
   font-family: "Nunito", sans-serif;
 }
-
 *,
 *::after,
 *::before {
@@ -10,7 +9,6 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 :root {
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -18,18 +16,21 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
-
 a {
   color: #333;
   text-decoration: none;
+  font-weight: 400;
 }
 a.active {
   font-weight: 700;
-  /* border-bottom: 4px solid #000; */
-  background: #333;
-  color: #fff;
+  color: #128cc8;
   padding: 0.5rem;
   border-radius: 0.3rem;
+  @media (max-width: 600px) {
+    background: #fff;
+    color: #000;
+    font-weight: 700;
+  }
 }
 .loader {
   position: absolute;
@@ -42,18 +43,20 @@ a.active {
   position: relative;
   z-index: 1;
 }
-/* .loader::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-  opacity: 0.7;
-  z-index: -1;
-} */
-
+.go__back {
+  max-width: 1300px;
+  width: 85%;
+  margin: auto;
+  @media (max-width: 600px) {
+    width: 90%;
+  }
+}
+.go__back p {
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
 .Toastify__toast--error {
   border: 1px solid #eb5757;
   border-radius: 10px !important;
@@ -61,7 +64,7 @@ a.active {
   z-index: 100000 !important;
 }
 .Toastify__toast--error::after {
-  content: url("../assets/images/svg/closeToast.svg");
+  /* content: url("../assets/images/svg/closeToast.svg"); */
   position: absolute;
   color: #333333;
   font-size: 15px;
@@ -71,7 +74,7 @@ a.active {
   padding-top: 14px !important;
 }
 .Toastify__toast--error::before {
-  content: url("../assets/images/svg/errorToast.svg");
+  /* content: url("../assets/images/svg/errorToast.svg"); */
   position: relative;
   z-index: 100000 !important;
   left: 12px;
@@ -84,14 +87,14 @@ a.active {
   z-index: 100000 !important;
 }
 .Toastify__toast--success::before {
-  content: url("../assets/images/svg/successToast.svg");
+  /* content: url("../assets/images/svg/successToast.svg"); */
   position: relative;
   z-index: 100000 !important;
   left: 12px;
   top: 6px;
 }
 .Toastify__toast--success::after {
-  content: url("../assets/images/svg/closeToast.svg");
+  /* content: url("../assets/images/svg/closeToast.svg"); */
   position: absolute;
   color: #333333;
   font-size: 15px;
@@ -106,14 +109,14 @@ a.active {
   z-index: 100000 !important;
 }
 .Toastify__toast--warning::before {
-  content: url("../assets/images/svg/warnToast.svg");
+  /* content: url("../assets/images/svg/warnToast.svg"); */
   position: relative;
   z-index: 100000 !important;
   left: 12px;
   top: 6px;
 }
 .Toastify__toast--warning::after {
-  content: url("../assets/images/svg/closeToast.svg");
+  /* content: url("../assets/images/svg/closeToast.svg"); */
   position: absolute;
   color: #e78326;
   font-size: 15px;

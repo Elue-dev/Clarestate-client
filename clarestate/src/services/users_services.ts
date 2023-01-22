@@ -1,4 +1,4 @@
-import { errorToast, successToast } from "../utils/alerts";
+import { errorHotToast, successHotToast } from "../utils/alerts";
 import axios from "axios";
 
 //@ts-ignore
@@ -18,12 +18,25 @@ export const updateUser = async (
       }
     );
     if (response?.data.status === "success") {
-      successToast(response?.data.message, "rsuccess");
+      successHotToast(response?.data.message);
     }
-
     return response.data;
   } catch (error: any) {
-    errorToast(error.response.data.message, "rerror");
+    errorHotToast(error.response.data.message);
+  }
+};
+
+export const deleteUser = async (userID: string, token: string) => {
+  try {
+    const response = await axios.delete(`${server_url}/api/users/${userID}`, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+    if (response?.data.status === "success") {
+      successHotToast(response?.data.message);
+    }
+    return response.data;
+  } catch (error: any) {
+    errorHotToast(error.response.data.message);
   }
 };
 
@@ -36,13 +49,10 @@ export const getUserProperties = async (token: string, credentials: any) => {
         headers: { authorization: `Bearer ${token}` },
       }
     );
-    if (response?.data.status === "success") {
-      successToast(response?.data.message, "rsuccess");
-    }
 
     return response.data;
   } catch (error: any) {
-    errorToast(error.response.data.message, "rerror");
+    errorHotToast(error.response.data.message);
   }
 };
 
@@ -56,11 +66,11 @@ export const sendContactEmail = async (token: string, contactData: any) => {
       }
     );
     if (response?.data.status === "success") {
-      successToast(response?.data.message, "rsuccess");
+      successHotToast(response?.data.message);
     }
 
     return response.data;
   } catch (error: any) {
-    errorToast(error.response.data.message, "rerror");
+    errorHotToast(error.response.data.message);
   }
 };

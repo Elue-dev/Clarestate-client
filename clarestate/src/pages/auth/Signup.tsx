@@ -32,7 +32,7 @@ export default function Signup() {
   const validateForm = () => {
     if (!first_name) {
       setError("First Name is required");
-      setTimeout(() => setError(""), 4000);
+      // setTimeout(() => setError(""), 4000);
       return;
     } else if (!last_name) {
       setError("Last Name is required");
@@ -196,6 +196,10 @@ export default function Signup() {
               </p>
             </div>
           </form>
+          {/* <p className={styles.home}>
+            <Link to="/"> Home </Link>&nbsp; &nbsp;&copy;{" "}
+            {new Date().getFullYear()}. Clarestate Inc.
+          </p> */}
         </div>
         <div className={styles["right__section"]}>
           <h1></h1>

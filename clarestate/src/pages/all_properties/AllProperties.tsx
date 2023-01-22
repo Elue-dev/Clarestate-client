@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  FILTER_BY_LOCATION,
+  FILTER_BY_CITY,
   FILTER_BY_SEARCH,
   selectFilteredProperties,
   SORT_PROPERTIES,
@@ -19,8 +19,7 @@ import Loader from "../../utils/Loader";
 import ReactPaginate from "react-paginate";
 import Select from "react-select";
 import styles from "./allProperties.module.scss";
-// import GoBack from "../../components/utilities/GoBack";
-// import { animateScroll as scroll } from "react-scroll";
+import DOMPurify from "dompurify";
 
 const sortOptions = [
   { value: "latest", label: "Sorting: Latest" },
@@ -28,11 +27,14 @@ const sortOptions = [
   { value: "highest-price", label: "Sort by Highest Price" },
   { value: "Available", label: "Sort: Available" },
   { value: "Not Available", label: "Sort: Not Available" },
+  { value: "For Sale", label: "Sort: For Sale" },
+  { value: "For Rent", label: "Sort: For Rent" },
+  { value: "For Shortlet", label: "Sort: For Shortlet" },
 ];
 
 export default function AllProperties() {
   const [properties, setProperties] = useState([]);
-  const [locations, setLocations] = useState("All");
+  const [cities, setCities] = useState("All");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("latest");
   const [showFilter, setShowFilter] = useState(false);
@@ -42,7 +44,7 @@ export default function AllProperties() {
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
-  const itemsPerPage = 3;
+  const itemsPerPage = 9;
 
   useEffect(() => {
     fetchAllProperties();
@@ -53,13 +55,9 @@ export default function AllProperties() {
     setProperties(data.properties);
   };
 
-  if (!properties) {
-    return <Loader />;
-  }
-
-  const allLocations = [
+  const allCities = [
     "All",
-    ...new Set(properties.map((property: any) => property.location)),
+    ...new Set(properties.map((property: any) => property.city)),
   ];
 
   const handlePageClick = (event: any) => {
@@ -79,19 +77,19 @@ export default function AllProperties() {
   window.addEventListener("scroll", fixNavbar);
 
   const clearFilters = () => {
-    setLocations("All");
+    setCities("All");
     setSearch("");
     setSort("latest");
     setShowFilter(false);
   };
 
-  const filterByLocation = (loc: string) => {
-    setLocations(loc);
+  const filterByCity = (city: string) => {
+    setCities(city);
     window.scrollTo(0, 0);
     setSearch("");
     setSort("latest");
     setPageCount(1);
-    dispatch(FILTER_BY_LOCATION({ properties, location: loc }));
+    dispatch(FILTER_BY_CITY({ properties, city: city }));
     setShowFilter(false);
   };
 
@@ -103,8 +101,8 @@ export default function AllProperties() {
   };
 
   useEffect(() => {
-    dispatch(FILTER_BY_LOCATION({ properties, location: locations }));
-  }, [dispatch, properties, locations]);
+    dispatch(FILTER_BY_CITY({ properties, city: cities }));
+  }, [dispatch, properties, cities]);
 
   useEffect(() => {
     dispatch(
@@ -131,6 +129,10 @@ export default function AllProperties() {
     setPageCount(Math.ceil(filteredProperties?.length / itemsPerPage));
   }, [itemOffset, itemsPerPage, filteredProperties]);
 
+  if (properties.length === 0) {
+    return <Loader />;
+  }
+
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -141,12 +143,12 @@ export default function AllProperties() {
       <div className={styles["hero__all-p-wrapper"]}>
         <div className={styles["hero__all-p"]}>
           <h2>EXPLORE OUR PROPERTIES</h2>
-          <label>
+          <label className={styles.label}>
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="SEARCH BY LOCATION OR PROPERTY NAME..."
+              placeholder="LOCATION, CITY OR PROPERTY NAME..."
             />
           </label>
         </div>
@@ -166,17 +168,16 @@ export default function AllProperties() {
         </div>
 
         <div className={styles["locations__list"]}>
-          <h2>Filter by location</h2>
-          {allLocations.map((loc: any, index: number) => (
-            <div>
+          <h2>Filter by city</h2>
+          {allCities.map((city: any, index: number) => (
+            <div key={index}>
               <button
-                key={index}
                 //@ts-ignore
-                className={`${locations}` === loc ? `${styles.active}` : null}
+                className={`${cities}` === city ? `${styles.active}` : null}
                 type="button"
-                onClick={() => filterByLocation(loc)}
+                onClick={() => filterByCity(city)}
               >
-                {loc}
+                {city}
               </button>
             </div>
           ))}
@@ -204,22 +205,12 @@ export default function AllProperties() {
               onChange={(option) => handleSelectChange(option)}
               className={styles["select__purpose"]}
             />
-            {/* <select value={sort} onChange={handleSelectChange}>
-              <option value="latest">Sorting: Latest</option>
-              <option value="lowest-price">Sort by Lowest Price</option>
-              <option value="highest-price">Sort by Highest Price</option>
-              <option value="Available">Sort: Available</option>
-              <option value="Not Available">Sort: Not Available</option>
-            </select> */}
           </label>
           {search && (
             <>
               {filteredProperties.length !== 0 && (
                 <h3>
-                  Search results for{" "}
-                  <b>
-                    <em>'{search}'</em>
-                  </b>{" "}
+                  Search results for <b>'{search}'</b>{" "}
                 </h3>
               )}
 
@@ -239,63 +230,92 @@ export default function AllProperties() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
           >
-            {filteredProperties.length === 0 && (
-              <div className={styles["no__property"]}>
-                <TbHomeOff className={styles["empty__icon"]} />
-                <h2>No properties found for '{search}'</h2>
-              </div>
+            {properties.length === 0 ? null : (
+              <>
+                {filteredProperties.length === 0 ? (
+                  <div className={styles["no__property"]}>
+                    <TbHomeOff className={styles["empty__icon"]} />
+                    <h2>No properties found</h2>
+                  </div>
+                ) : null}
+                {currentItems?.map((property: any) => {
+                  const {
+                    id,
+                    name,
+                    location,
+                    description,
+                    price,
+                    images,
+                    availability,
+                    slug,
+                    purpose,
+                  } = property;
+                  return (
+                    <div className={styles["wrap_p"]} key={id}>
+                      <div className={styles["image_"]}>
+                        <img src={images[0]} alt={name} />
+                        <p
+                          className={styles["p_availability"]}
+                          style={{
+                            background:
+                              availability === "Available"
+                                ? "rgba(136, 229, 29, 0.575)"
+                                : "rgba(243, 90, 52, 0.411)",
+                          }}
+                        >
+                          {availability}
+                        </p>
+                        <p className={styles["property__purpose"]}>
+                          <span
+                            className={
+                              purpose === "Sale"
+                                ? `${styles.sale} ${styles.purpose}`
+                                : purpose === "Rent"
+                                ? `${styles.rent}  ${styles.purpose}`
+                                : `${styles.shortlet}  ${styles.purpose}`
+                            }
+                          >
+                            {purpose}
+                          </span>
+                        </p>
+                        <p className={styles["p_location"]}>{location}</p>
+                      </div>
+                      <div className={styles["inner_c"]}>
+                        <div className={styles["name_"]}>
+                          <h2>{name}</h2>
+                        </div>
+                        <div
+                          className={styles["desc_"]}
+                          dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(
+                              description.substring(0, 80) + "......"
+                            ),
+                          }}
+                        ></div>
+                        <div className={styles["price_"]}>
+                          <p>
+                            ₦{new Intl.NumberFormat().format(price)}
+                            <span>
+                              {purpose === "Rent"
+                                ? "/year"
+                                : purpose === "Shortlet"
+                                ? "/night"
+                                : null}
+                            </span>
+                          </p>
+                        </div>
+                        <Link to={`/property/${slug}`}>
+                          <button className={styles["more_"]}>
+                            <CiRead />
+                            MORE DETAILS
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
             )}
-            {currentItems?.map((property: any) => {
-              const {
-                id,
-                name,
-                location,
-                description,
-                price,
-                images,
-                availability,
-                slug,
-              } = property;
-              return (
-                <div className={styles["wrap_p"]} key={id}>
-                  <div className={styles["image_"]}>
-                    <img src={images[0]} alt={name} />
-                    <p
-                      className={styles["p_availability"]}
-                      style={{
-                        background:
-                          availability === "Available"
-                            ? "rgba(136, 229, 29, 0.575)"
-                            : "rgba(243, 90, 52, 0.411)",
-                      }}
-                    >
-                      {availability}
-                    </p>
-                    <p className={styles["p_location"]}>{location}</p>
-                  </div>
-                  <div className={styles["inner_c"]}>
-                    <div className={styles["name_"]}>
-                      <h2>{name}</h2>
-                    </div>
-                    <div className={styles["desc_"]}>
-                      <p>{description.substring(0, 60)}...</p>
-                    </div>
-                    <div className={styles["price_"]}>
-                      <p>
-                        NGN {new Intl.NumberFormat().format(price)}
-                        <span>/night</span>
-                      </p>
-                    </div>
-                    <Link to={`/property/${slug}`}>
-                      <button className={styles["more_"]}>
-                        <CiRead />
-                        MORE DETAILS
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
           </motion.div>
           {filteredProperties.length ? (
             <ReactPaginate
@@ -316,6 +336,18 @@ export default function AllProperties() {
           ) : null}
         </div>
       </div>
+      {
+        //@ts-ignore
+        !filteredProperties.length === 0 && (
+          <div className={styles.disclaimer}>
+            <h3>
+              DISCLAIMER: We do not own any property here. This site is just a
+              personal project to showcase my skills. We are not selling or
+              renting any of these properties
+            </h3>
+          </div>
+        )
+      }
     </motion.section>
   );
 }
