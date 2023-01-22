@@ -19,12 +19,13 @@ export default function PropertiesForSale() {
     return await axios.get(`${server_url}/api/properties`);
   };
 
-  const { data, isLoading, refetch } = useQuery("properties", fetchProperties, {
-    refetchOnWindowFocus: false,
-    onSuccess: () => {
-      dispatch(SET_CITIES(data?.data.properties));
-    },
-  });
+  const { data, isLoading, isSuccess, refetch } = useQuery(
+    "properties",
+    fetchProperties,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   if (isLoading) {
     return <Loader />;
@@ -37,6 +38,10 @@ export default function PropertiesForSale() {
   );
 
   refetch();
+
+  if (isSuccess) {
+    dispatch(SET_CITIES(properties));
+  }
 
   return (
     <>
